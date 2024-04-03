@@ -11,18 +11,30 @@ public class TowerHealthDefens : MonoBehaviour
     public UnityEvent onTowerDestroyed; // Event yang dipanggil ketika tower dihancurkan
     public Slider slider;
     public TextMeshProUGUI healthText; // Referensi untuk komponen teks (gunakan TextMeshProUGUI jika menggunakan TextMeshPro)
+    public GameObject popUpDamagePrefab;
+    public TMP_Text popUpText; 
+
+
 
     void Start()
     {
-        health = maxHealth;
-        slider.maxValue = maxHealth;
-        UpdateHealthText(); // Update teks saat game dimulai
+        health = maxHealth; // Atur health ke nilai maksimum
+        slider.maxValue = maxHealth; // Atur nilai maksimum slider
+        slider.value = health; // Atur nilai saat ini dari slider sama dengan health
+        UpdateHealthText(); // Perbarui tampilan teks untuk health
+        slider.interactable = false; // Pastikan slider tidak dapat diinteraksi
     }
 
-    void Update()
+
+    public void takeDamage(int damage)
     {
-        slider.value = health;
-        UpdateHealthText(); // Update teks setiap kali health berubah dalam Update
+        health -= damage; // Kurangi health sesuai dengan damage yang diterima
+        health = Mathf.Clamp(health, 0, maxHealth); // Pastikan health tidak kurang dari 0 dan tidak lebih dari maxHealth
+        slider.value = health; // Update nilai slider setelah mengubah health
+        UpdateHealthText(); // Update teks health
+
+        popUpText.text = damage.ToString();
+        Instantiate(popUpDamagePrefab, transform.position, Quaternion.identity);
 
         if (health <= 0)
         {

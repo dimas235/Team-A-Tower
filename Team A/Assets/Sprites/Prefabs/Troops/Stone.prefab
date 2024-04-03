@@ -149,5 +149,4 @@ MonoBehaviour:
   stoneRb: {fileID: 919043778520726557}
   speed: 5
   range: 10
-  damage: 5
-  defenderLayerName: Troops
+  damage: 10

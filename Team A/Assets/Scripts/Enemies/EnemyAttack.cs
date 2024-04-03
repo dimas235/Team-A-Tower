@@ -32,7 +32,7 @@ public class EnemyAttack : MonoBehaviour
         TowerHealthDefens towerHealthDefens = target.GetComponent<TowerHealthDefens>();
         if (towerHealthDefens != null)
         {
-            towerHealthDefens.health -= damage;
+            towerHealthDefens.takeDamage(damage);
             lastAttackTime = Time.time;
             return;
         }
@@ -40,7 +40,7 @@ public class EnemyAttack : MonoBehaviour
         DefenderHealth defenderHealth = target.GetComponent<DefenderHealth>();
         if (defenderHealth != null)
         {
-            defenderHealth.health -= damage;
+            defenderHealth.takeDamage(damage);
             lastAttackTime = Time.time;
         }
     }

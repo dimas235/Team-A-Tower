@@ -37,7 +37,7 @@ public class Stone : MonoBehaviour
         }
         else if (towerHealthAttacker)
         {
-            towerHealthAttacker.health -= damage;
+            towerHealthAttacker.takeDamage(damage);
             Destroy(gameObject);
         }
     }
