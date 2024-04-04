@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4063800033737558761}
   - component: {fileID: -7849820853258974568}
   m_Layer: 0
-  m_Name: PopupTextDamage
+  m_Name: PopupTextTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
