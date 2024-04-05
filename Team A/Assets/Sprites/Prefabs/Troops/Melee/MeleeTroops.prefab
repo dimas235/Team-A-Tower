@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5828635418723046142
+--- !u!1 &6260556612959462239
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,52 +8,52 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4100616314187429795}
-  - component: {fileID: 8087635120667329900}
-  - component: {fileID: 593178458318209655}
-  - component: {fileID: 2177330325133319350}
-  - component: {fileID: 5628345680920833339}
-  - component: {fileID: 5049085973313158353}
-  - component: {fileID: 1735008189492238574}
-  - component: {fileID: 5254506975362938361}
-  - component: {fileID: 3396824379069390756}
+  - component: {fileID: 8206942521047394579}
+  - component: {fileID: 2184384946970879744}
+  - component: {fileID: 765575599414346303}
+  - component: {fileID: 1427343018768060137}
+  - component: {fileID: 168509265414530804}
+  - component: {fileID: 1720040568083232364}
+  - component: {fileID: 2972078975977533676}
+  - component: {fileID: 940122462586317749}
+  - component: {fileID: 8183455406960011880}
   m_Layer: 7
-  m_Name: Troops
+  m_Name: MeleeTroops
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4100616314187429795
+--- !u!4 &8206942521047394579
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5828635418723046142}
+  m_GameObject: {fileID: 6260556612959462239}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.22, y: 0.41, z: -7.09}
+  m_LocalPosition: {x: -7.460037, y: 0.42134115, z: -7.138}
   m_LocalScale: {x: 0.291174, y: 0.291174, z: 0.291174}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &8087635120667329900
+--- !u!33 &2184384946970879744
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5828635418723046142}
+  m_GameObject: {fileID: 6260556612959462239}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &593178458318209655
+--- !u!23 &765575599414346303
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5828635418723046142}
+  m_GameObject: {fileID: 6260556612959462239}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -67,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 55348a2cc3ca699438f407f48711d432, type: 2}
+  - {fileID: 2100000, guid: 45a92da0cb94eca40a3650b8305c2811, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -89,13 +89,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2177330325133319350
+--- !u!65 &1427343018768060137
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5828635418723046142}
+  m_GameObject: {fileID: 6260556612959462239}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -110,13 +110,13 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &5628345680920833339
+--- !u!54 &168509265414530804
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5828635418723046142}
+  m_GameObject: {fileID: 6260556612959462239}
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
@@ -137,64 +137,45 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &5049085973313158353
+--- !u!114 &1720040568083232364
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5828635418723046142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40098a7176b06dd4a96b813a8bdddc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stonePrefab: {fileID: 7040988754165475524, guid: 4eae16d5ea1dbc749beee56d6def22ac, type: 3}
-  coolDown: 2
---- !u!114 &1735008189492238574
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5828635418723046142}
+  m_GameObject: {fileID: 6260556612959462239}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adf1ef84e52818d41ba6359d4ed13360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1
-  defenderRb: {fileID: 5628345680920833339}
---- !u!114 &5254506975362938361
+  defenderRb: {fileID: 168509265414530804}
+--- !u!114 &2972078975977533676
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5828635418723046142}
+  m_GameObject: {fileID: 6260556612959462239}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 464dc1d52f04e7b49a7f4eb6507a3657, type: 3}
+  m_Script: {fileID: 11500000, guid: 67608efd8047b034989d3695312a6069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  troopsState: 0
-  detectionRange: 3
-  enemyLayer:
+  damage: 50
+  attackCooldown: 4
+  attackRange: 0.3
+  targetLayer:
     serializedVersion: 2
     m_Bits: 576
-  defenderLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  nonCollisionRadius: 1
-  defenderMovement: {fileID: 1735008189492238574}
-  throwingScript: {fileID: 5049085973313158353}
---- !u!114 &3396824379069390756
+--- !u!114 &940122462586317749
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5828635418723046142}
+  m_GameObject: {fileID: 6260556612959462239}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2769f236e19091c469844985b60740a2, type: 3}
@@ -204,3 +185,26 @@ MonoBehaviour:
   maxHealth: 100
   popUpDamagePrefab: {fileID: 4095716049173766869, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
   popUpText: {fileID: 558807410922814373, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
+--- !u!114 &8183455406960011880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6260556612959462239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14d050ab87e4fe84f8e04803f859c50e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentState: 0
+  detectionRange: 0.3
+  defenderLayer:
+    serializedVersion: 2
+    m_Bits: 384
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 576
+  nonCollisionRadius: 1
+  troopMovement: {fileID: 1720040568083232364}
+  troopAttack: {fileID: 2972078975977533676}

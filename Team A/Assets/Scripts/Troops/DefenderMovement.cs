@@ -17,6 +17,5 @@ public class DefenderMovement : MonoBehaviour
     void FixedUpdate()
     {
          defenderRb.velocity = Vector2.right * speed;
-        
     }
 }
