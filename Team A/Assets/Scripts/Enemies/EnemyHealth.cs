@@ -9,7 +9,7 @@ public class EnemyHealth : MonoBehaviour
     public int maxHealth = 100;
     public GameObject popUpDamagePrefab;
     public TMP_Text popUpText; 
-
+    public int coinValue = 5; // Jumlah coin yang diberikan saat musuh terbunuh
 
     void Start()
     {
@@ -24,8 +24,14 @@ public class EnemyHealth : MonoBehaviour
 
         if (health <= 0)
         {
+            // Cari instance dari CoinManager dan tambahkan coin
+            CoinManager coinManager = FindObjectOfType<CoinManager>();
+            if (coinManager != null)
+            {
+                coinManager.OnEnemyKilled(coinValue);
+            }
+
             Destroy(gameObject);
         }
     }
-
 }

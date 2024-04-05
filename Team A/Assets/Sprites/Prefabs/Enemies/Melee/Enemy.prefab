@@ -185,6 +185,7 @@ MonoBehaviour:
   maxHealth: 100
   popUpDamagePrefab: {fileID: 4095716049173766869, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
   popUpText: {fileID: 558807410922814373, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
+  coinValue: 100
 --- !u!114 &1876923950603444709
 MonoBehaviour:
   m_ObjectHideFlags: 0
