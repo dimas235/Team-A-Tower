@@ -8,6 +8,9 @@ public class Stone : MonoBehaviour
     public int damage;
     // public float knockbackForce; // Variabel ini tidak diperlukan lagi karena knockback dihilangkan
 
+    public LayerMask ArrowAttackerLayer;
+    public float nonCollisionRadius = 1f;
+
     private float timer;
 
     void Start()
@@ -29,6 +32,15 @@ public class Stone : MonoBehaviour
     {
         EnemyHealth enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();
         TowerHealthAttacker towerHealthAttacker = collision.gameObject.GetComponent<TowerHealthAttacker>();
+
+        Collider[] hits = Physics.OverlapSphere(transform.position, nonCollisionRadius, ArrowAttackerLayer);
+        foreach(var hit in hits)
+        {
+            if(hit.gameObject != gameObject)
+            {
+                Physics.IgnoreCollision(GetComponent<Collider>(), hit, true);
+            }
+        }
 
         if(enemyHealth)
         {
