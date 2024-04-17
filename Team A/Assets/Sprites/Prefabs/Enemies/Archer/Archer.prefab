@@ -201,7 +201,7 @@ MonoBehaviour:
     m_Bits: 64
   defenderLayer:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 2432
   nonCollisionRadius: 1
   enemyMovement: {fileID: 9082168442773224669}
   bowScript: {fileID: 8139322258720993779}

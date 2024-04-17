@@ -18,5 +18,12 @@ public class EnemyAttack : MeleeAttack
             defenderHealth.takeDamage(damage);
             lastAttackTime = Time.time;
         }
+
+        PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
+        if (playerHealth != null)
+        {
+            playerHealth.takeDamage(damage);
+            lastAttackTime = Time.time;
+        }
     }
 }

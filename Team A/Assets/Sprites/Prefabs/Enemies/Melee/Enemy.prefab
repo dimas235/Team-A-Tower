@@ -200,12 +200,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   detectionRange: 0.3
-  defenderLayer:
-    serializedVersion: 2
-    m_Bits: 384
-  enemyLayer:
+  enemiesLayer:
     serializedVersion: 2
     m_Bits: 64
+  defenderLayer:
+    serializedVersion: 2
+    m_Bits: 2432
   nonCollisionRadius: 1
   enemyMovement: {fileID: 1350788533494521027}
   enemyAttack: {fileID: 3992306969193674310}

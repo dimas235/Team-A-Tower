@@ -199,12 +199,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 0
   detectionRange: 0.3
-  defenderLayer:
-    serializedVersion: 2
-    m_Bits: 384
   enemyLayer:
     serializedVersion: 2
     m_Bits: 576
+  defenderLayer:
+    serializedVersion: 2
+    m_Bits: 2176
   nonCollisionRadius: 1
   troopMovement: {fileID: 1720040568083232364}
   troopAttack: {fileID: 2972078975977533676}

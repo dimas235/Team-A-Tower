@@ -15,8 +15,8 @@ TagManager:
   - Troops
   - TowerDefense
   - TowerEnemy
-  - ArrowEnemy
-  - ArrowTroops
+  - Arrow
+  - Player
   - 
   - 
   - 

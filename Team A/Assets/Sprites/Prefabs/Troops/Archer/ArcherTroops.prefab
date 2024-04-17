@@ -184,7 +184,7 @@ MonoBehaviour:
     m_Bits: 576
   defenderLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 2176
   nonCollisionRadius: 1
   defenderMovement: {fileID: 1735008189492238574}
   throwingScript: {fileID: 5049085973313158353}

@@ -23,7 +23,7 @@ public class Arrow : MonoBehaviour
     {
         arrowRb.velocity = Vector2.left * speed;
         timer -= Time.deltaTime;
-        if(timer <= 0)
+        if (timer <= 0)
         {
             Destroy(gameObject);
         }
@@ -33,19 +33,25 @@ public class Arrow : MonoBehaviour
     {
         TowerHealthDefens towerHealthDefens = collision.gameObject.GetComponent<TowerHealthDefens>();
         DefenderHealth defenderHealth = collision.gameObject.GetComponent<DefenderHealth>();
+        PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>(); // Menambahkan ini
 
         Collider[] hits = Physics.OverlapSphere(transform.position, nonCollisionRadius, ArrowDefenderLayer);
-        foreach(var hit in hits)
+        foreach (var hit in hits)
         {
-            if(hit.gameObject != gameObject)
+            if (hit.gameObject != gameObject)
             {
                 Physics.IgnoreCollision(GetComponent<Collider>(), hit, true);
             }
         }
 
-        if(towerHealthDefens)
+        if (towerHealthDefens)
         {
             towerHealthDefens.takeDamage(damage);
+            Destroy(gameObject);
+        }
+        else if (playerHealth) // Sekarang `playerHealth` sudah didefinisikan
+        {
+            playerHealth.takeDamage(damage);
             Destroy(gameObject);
         }
         else if (defenderHealth)

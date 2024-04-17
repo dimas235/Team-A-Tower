@@ -3,10 +3,11 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
+    public bool isMoving;
     
     private Rigidbody rb;
     private float movementInput;
-    private bool facingRight = true;
+    public bool facingRight = true; // Dijadikan public untuk diakses oleh PlayerThrowing
 
     void Start()
     {
@@ -15,18 +16,20 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // Mendapatkan input dari keyboard dengan KeyCode
+        isMoving = false;
+
         movementInput = 0f;
         if (Input.GetKey(KeyCode.D))
         {
             movementInput = 1f;
+            isMoving = true;
         }
         else if (Input.GetKey(KeyCode.A))
         {
             movementInput = -1f;
+            isMoving = true;
         }
-        
-        // Memutar karakter jika bergerak ke kiri atau kanan
+
         if (movementInput > 0 && !facingRight)
         {
             Flip();
@@ -39,16 +42,14 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Bergerak setiap frame fisika
         rb.MovePosition(rb.position + new Vector3(movementInput, 0f, 0f) * moveSpeed * Time.fixedDeltaTime);
     }
 
-    void Flip()
+    public void Flip()
     {
-        // Memutar karakter
         facingRight = !facingRight;
         Vector3 theScale = transform.localScale;
-        theScale.x *= -1; // Mengganti sisi dari karakter
+        theScale.x *= -1;
         transform.localScale = theScale;
     }
 }
