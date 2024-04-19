@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 3761162683368463112}
   - component: {fileID: 3842243944788139758}
   - component: {fileID: 4846220213110851617}
+  - component: {fileID: 7772516522649997186}
   - component: {fileID: 919043778520726557}
-  - component: {fileID: -7086870872157181310}
-  m_Layer: 11
-  m_Name: StoneMagePlayer
+  m_Layer: 10
+  m_Name: StoneMageEnemies
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,6 +107,22 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7772516522649997186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7040988754165475524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d2d74ecd2c0eef4daee68efc67bbf76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ammoRb: {fileID: 919043778520726557}
+  speed: 5
+  range: 3
+  damage: 10
 --- !u!54 &919043778520726557
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -134,22 +150,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 12
   m_CollisionDetection: 0
---- !u!114 &-7086870872157181310
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7040988754165475524}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97aec216c3059b741905c221698bc355, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mageRb: {fileID: 919043778520726557}
-  speed: 5
-  range: 1
-  damage: 1
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 4608

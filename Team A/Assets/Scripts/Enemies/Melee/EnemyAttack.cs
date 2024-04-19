@@ -7,7 +7,7 @@ public class EnemyAttack : MeleeAttack
         TowerHealthDefens towerHealthDefens = target.GetComponent<TowerHealthDefens>();
         if (towerHealthDefens != null)
         {
-            towerHealthDefens.takeDamage(damage);
+            towerHealthDefens.TakeDamage(damage, TowerHealthDefens.DamageType.Physical);
             lastAttackTime = Time.time;
             return;
         }
@@ -15,14 +15,14 @@ public class EnemyAttack : MeleeAttack
         DefenderHealth defenderHealth = target.GetComponent<DefenderHealth>();
         if (defenderHealth != null)
         {
-            defenderHealth.takeDamage(damage);
+            defenderHealth.TakeDamage(damage, DefenderHealth.DamageType.Physical);
             lastAttackTime = Time.time;
         }
 
         PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
         if (playerHealth != null)
         {
-            playerHealth.takeDamage(damage);
+            playerHealth.TakeDamage(damage, PlayerHealth.DamageType.Physical);
             lastAttackTime = Time.time;
         }
     }

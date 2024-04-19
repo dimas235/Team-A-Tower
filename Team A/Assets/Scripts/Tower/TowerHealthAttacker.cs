@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -9,37 +7,48 @@ public class TowerHealthAttacker : MonoBehaviour
 {
     public int health;
     public int maxHealth = 100;
-    public UnityEvent onTowerDestroyed; // Event yang dipanggil ketika tower dihancurkan
+    public UnityEvent onTowerDestroyed;
     public Slider slider;
-    public TextMeshProUGUI healthText; // Referensi untuk komponen teks (gunakan TextMeshProUGUI jika menggunakan TextMeshPro)
-    public GameObject popUpDamagePrefab;
-    public TMP_Text popUpText; 
+    public TextMeshProUGUI healthText;
+    public GameObject popUpDamagePrefabPhysical;
+    public GameObject popUpDamagePrefabMage;
 
-
+    public enum DamageType
+    {
+        Physical,
+        Mage
+    }
 
     void Start()
     {
-        health = maxHealth; // Atur health ke nilai maksimum
-        slider.maxValue = maxHealth; // Atur nilai maksimum slider
-        slider.value = health; // Atur nilai saat ini dari slider sama dengan health
-        UpdateHealthText(); // Perbarui tampilan teks untuk health
-        slider.interactable = false; // Pastikan slider tidak dapat diinteraksi
+        health = maxHealth;
+        slider.maxValue = maxHealth;
+        slider.value = health;
+        UpdateHealthText();
+        slider.interactable = false;
     }
 
-
-    public void takeDamage(int damage)
+    public void TakeDamage(int damage, DamageType type)
     {
-        health -= damage; // Kurangi health sesuai dengan damage yang diterima
-        health = Mathf.Clamp(health, 0, maxHealth); // Pastikan health tidak kurang dari 0 dan tidak lebih dari maxHealth
-        slider.value = health; // Update nilai slider setelah mengubah health
-        UpdateHealthText(); // Update teks health
+        health -= damage;
+        health = Mathf.Clamp(health, 0, maxHealth);
+        slider.value = health;
+        UpdateHealthText();
 
-        popUpText.text = damage.ToString();
-        Instantiate(popUpDamagePrefab, transform.position, Quaternion.identity);
+        // Instantiate the correct damage popup prefab based on the damage type
+        GameObject selectedPrefab = type == DamageType.Mage ? popUpDamagePrefabMage : popUpDamagePrefabPhysical;
+        if (selectedPrefab != null)
+        {
+            GameObject popup = Instantiate(selectedPrefab, transform.position, Quaternion.identity);
+            TMP_Text popupText = popup.GetComponentInChildren<TMP_Text>();
+            if (popupText != null)
+            {
+                popupText.text = damage.ToString();
+            }
+        }
 
         if (health <= 0)
         {
-            // Nonaktifkan tower dan panggil event onTowerDestroyed
             gameObject.SetActive(false);
             onTowerDestroyed.Invoke();
             if (slider.gameObject != null)
@@ -49,16 +58,8 @@ public class TowerHealthAttacker : MonoBehaviour
         }
     }
 
-    public void ResetHealth()
-    {
-        health = maxHealth;
-        UpdateHealthText(); // Update teks saat health di-reset
-    }
-
-    // Method untuk update teks health bar
     private void UpdateHealthText()
     {
-        healthText.text = health.ToString() + "/" + maxHealth.ToString(); // Mengatur teks untuk menampilkan health
+        healthText.text = health.ToString() + "/" + maxHealth.ToString();
     }
 }
-

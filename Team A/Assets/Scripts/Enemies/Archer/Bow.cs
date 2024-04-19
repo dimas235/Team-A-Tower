@@ -38,14 +38,14 @@ public class Bow : MonoBehaviour
                 Physics.IgnoreCollision(arrowCollider, parentCollider);
             }
 
-            Collider[] allEnemies = FindObjectsOfType<Collider>();
-            foreach (var enemy in allEnemies)
-            {
-                if(enemy.gameObject.layer == LayerMask.NameToLayer("Enemies"))
-                {
-                    Physics.IgnoreCollision(arrowCollider, enemy);
-                }
-            }
+            // Collider[] allEnemies = FindObjectsOfType<Collider>();
+            // foreach (var enemy in allEnemies)
+            // {
+            //     if(enemy.gameObject.layer == LayerMask.NameToLayer("Enemies"))
+            //     {
+            //         Physics.IgnoreCollision(arrowCollider, enemy);
+            //     }
+            // }
 
             StartCoroutine(EnableColliderWhenPassed(arrow, arrowCollider));
             lastAttackTime = attackCooldown;

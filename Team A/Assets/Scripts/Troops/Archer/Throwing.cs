@@ -39,15 +39,15 @@ public class Throwing : MonoBehaviour
                 Physics.IgnoreCollision(stoneCollider, parentCollider);
             }
 
-            // Mengabaikan tabrakan dengan semua defender lainnya
-            Collider[] allDefenders = FindObjectsOfType<Collider>(); // Cari semua Collider yang mungkin adalah defender
-            foreach (var defender in allDefenders)
-            {
-                if(defender.gameObject.layer == LayerMask.NameToLayer("Troops")) // Ganti "DefenderLayer" dengan nama layer defender Anda
-                {
-                    Physics.IgnoreCollision(stoneCollider, defender);
-                }
-            }
+            // // Mengabaikan tabrakan dengan semua defender lainnya
+            // Collider[] allDefenders = FindObjectsOfType<Collider>(); // Cari semua Collider yang mungkin adalah defender
+            // foreach (var defender in allDefenders)
+            // {
+            //     if(defender.gameObject.layer == LayerMask.NameToLayer("Troops")) // Ganti "DefenderLayer" dengan nama layer defender Anda
+            //     {
+            //         Physics.IgnoreCollision(stoneCollider, defender);
+            //     }
+            // }
 
             StartCoroutine(EnableColliderWhenPassed(stone, stoneCollider));
             timer = coolDown;

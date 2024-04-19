@@ -12,8 +12,8 @@ public class MeleeTroopsStateMachine : MonoBehaviour
     public State currentState;
     public float detectionRange;
     public LayerMask enemyLayer; // Layer untuk musuh
-    public LayerMask defenderLayer; // Layer untuk defender, digunakan untuk mengabaikan tabrakan
-    public float nonCollisionRadius = 1f; // Jarak untuk mengabaikan tabrakan antar musuh
+    // public LayerMask defenderLayer; // Layer untuk defender, digunakan untuk mengabaikan tabrakan
+    // public float nonCollisionRadius = 1f; // Jarak untuk mengabaikan tabrakan antar musuh
     public DefenderMovement troopMovement;
     public TroopAttack troopAttack; // Class yang mirip dengan EnemyAttack tetapi untuk Troops
 
@@ -29,7 +29,7 @@ public class MeleeTroopsStateMachine : MonoBehaviour
     void Update()
     {
         CheckStateConditions();
-        IgnoreCollisionsWithDefender();
+        // IgnoreCollisionsWithDefender();
     }
 
     void CheckStateConditions()
@@ -51,16 +51,16 @@ public class MeleeTroopsStateMachine : MonoBehaviour
         }
     }
 
-    void IgnoreCollisionsWithDefender()
-    {
-        // Mendeteksi musuh lain dalam radius tertentu
-        Collider[] enemies = Physics.OverlapSphere(transform.position, nonCollisionRadius, defenderLayer);
-        foreach (var otherEnemy in enemies)
-        {
-            if (otherEnemy.gameObject != gameObject) // Pastikan tidak memilih collider sendiri
-            {
-                Physics.IgnoreCollision(GetComponent<Collider>(), otherEnemy, true);
-            }
-        }
-    }
+    // void IgnoreCollisionsWithDefender()
+    // {
+    //     // Mendeteksi musuh lain dalam radius tertentu
+    //     Collider[] enemies = Physics.OverlapSphere(transform.position, nonCollisionRadius, defenderLayer);
+    //     foreach (var otherEnemy in enemies)
+    //     {
+    //         if (otherEnemy.gameObject != gameObject) // Pastikan tidak memilih collider sendiri
+    //         {
+    //             Physics.IgnoreCollision(GetComponent<Collider>(), otherEnemy, true);
+    //         }
+    //     }
+    // }
 }

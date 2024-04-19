@@ -34,11 +34,21 @@ public class PlayerMage : MonoBehaviour
         if (((1 << collision.gameObject.layer) & enemyLayer) != 0)
         {
             EnemyHealth enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();
+
             if (enemyHealth != null)
             {
                 // Panggil metode takeDamage dengan huruf 't' kecil sesuai definisi di kelas EnemyHealth
-                enemyHealth.takeDamage(damage); 
+                enemyHealth.TakeDamage(damage, EnemyHealth.DamageType.Mage); 
             }
+            Destroy(gameObject);
+        }
+
+        TowerHealthAttacker towerHealthAttacker = collision.gameObject.GetComponent<TowerHealthAttacker>();
+
+        if (towerHealthAttacker != null)
+        {
+            // Panggil metode TakeDamage dengan huruf 'T' besar sesuai definisi di kelas TowerHealthAttacker
+            towerHealthAttacker.TakeDamage(damage, TowerHealthAttacker.DamageType.Mage);
             Destroy(gameObject);
         }
     }

@@ -5,8 +5,8 @@ public class StateMachine : MonoBehaviour
     public TroopsState troopsState;
     public float detectionRange;
     public LayerMask enemyLayer;
-    public LayerMask defenderLayer; // Layer untuk defender lain
-    public float nonCollisionRadius = 1f; // Jarak untuk mengabaikan tabrakan antar defender
+    // public LayerMask defenderLayer; // Layer untuk defender lain
+    // public float nonCollisionRadius = 1f; // Jarak untuk mengabaikan tabrakan antar defender
     public DefenderMovement defenderMovement;
     public Throwing throwingScript;
 
@@ -35,7 +35,7 @@ public class StateMachine : MonoBehaviour
             ChangeState(TroopsState.Walking);
         }
 
-        IgnoreCollisionsWithDefenders();
+        // IgnoreCollisionsWithDefenders();
     }
 
     void ChangeState(TroopsState newState)
@@ -48,18 +48,18 @@ public class StateMachine : MonoBehaviour
         }
     }
 
-    void IgnoreCollisionsWithDefenders()
-    {
-        // Mendeteksi defender lain dalam radius tertentu
-        Collider[] defenders = Physics.OverlapSphere(transform.position, nonCollisionRadius, defenderLayer);
-        foreach (var otherDefender in defenders)
-        {
-            if (otherDefender.gameObject != gameObject) // Pastikan tidak memilih collider sendiri
-            {
-                Physics.IgnoreCollision(GetComponent<Collider>(), otherDefender, true);
-            }
-        }
-    }
+    // void IgnoreCollisionsWithDefenders()
+    // {
+    //     // Mendeteksi defender lain dalam radius tertentu
+    //     Collider[] defenders = Physics.OverlapSphere(transform.position, nonCollisionRadius, defenderLayer);
+    //     foreach (var otherDefender in defenders)
+    //     {
+    //         if (otherDefender.gameObject != gameObject) // Pastikan tidak memilih collider sendiri
+    //         {
+    //             Physics.IgnoreCollision(GetComponent<Collider>(), otherDefender, true);
+    //         }
+    //     }
+    // }
 
     public enum TroopsState
     {

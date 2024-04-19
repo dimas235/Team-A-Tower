@@ -17,8 +17,8 @@ GameObject:
   - component: {fileID: 8139322258720993779}
   - component: {fileID: 9082168442773224669}
   - component: {fileID: 4488942444806660334}
-  m_Layer: 6
-  m_Name: Archer
+  m_Layer: 12
+  m_Name: ArcherEnemies
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -118,7 +118,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3810191952997043970}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -151,8 +151,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   maxHealth: 100
-  popUpDamagePrefab: {fileID: 4095716049173766869, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
-  popUpText: {fileID: 558807410922814373, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
+  popUpDamagePrefabPhysical: {fileID: 4095716049173766869, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
+  popUpDamagePrefabMage: {fileID: 4095716049173766869, guid: 62bd6fc259b38a742a1945138f781f6f, type: 3}
   coinValue: 100
 --- !u!114 &8139322258720993779
 MonoBehaviour:
@@ -196,12 +196,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemiesState: 0
   detectionRange: 3
-  enemiesLayer:
-    serializedVersion: 2
-    m_Bits: 64
   defenderLayer:
     serializedVersion: 2
-    m_Bits: 2432
-  nonCollisionRadius: 1
+    m_Bits: 8576
   enemyMovement: {fileID: 9082168442773224669}
   bowScript: {fileID: 8139322258720993779}

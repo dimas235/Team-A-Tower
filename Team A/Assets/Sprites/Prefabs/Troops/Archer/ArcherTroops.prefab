@@ -118,7 +118,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5828635418723046142}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -181,11 +181,7 @@ MonoBehaviour:
   detectionRange: 3
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 576
-  defenderLayer:
-    serializedVersion: 2
-    m_Bits: 2176
-  nonCollisionRadius: 1
+    m_Bits: 4608
   defenderMovement: {fileID: 1735008189492238574}
   throwingScript: {fileID: 5049085973313158353}
 --- !u!114 &3396824379069390756
@@ -202,5 +198,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   maxHealth: 100
-  popUpDamagePrefab: {fileID: 4095716049173766869, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
-  popUpText: {fileID: 558807410922814373, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
+  popUpDamagePrefabPhysical: {fileID: 4095716049173766869, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
+  popUpDamagePrefabMage: {fileID: 4095716049173766869, guid: 62bd6fc259b38a742a1945138f781f6f, type: 3}

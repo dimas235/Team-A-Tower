@@ -1,8 +1,10 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Stone : MonoBehaviour
+public class AmmoMageTroops : MonoBehaviour
 {
-    public Rigidbody stoneRb;
+    public Rigidbody ammoRb;
     public float speed;
     public float range;
     public int damage;
@@ -16,7 +18,7 @@ public class Stone : MonoBehaviour
 
     void FixedUpdate()
     {
-        stoneRb.velocity = Vector2.right * speed;
+        ammoRb.velocity = Vector3.right * speed; // Assuming the ammo moves to the right
         timer -= Time.deltaTime;
         if(timer <= 0)
         {
@@ -31,14 +33,12 @@ public class Stone : MonoBehaviour
 
         if (enemyHealth != null)
         {
-            // Menggunakan versi yang benar dari TakeDamage dengan enum DamageType
-            enemyHealth.TakeDamage(damage, EnemyHealth.DamageType.Physical);
+            enemyHealth.TakeDamage(damage, EnemyHealth.DamageType.Mage);
             Destroy(gameObject);
         }
         else if (towerHealthAttacker != null)
         {
-            // Panggil dengan huruf 'T' besar sesuai dengan konvensi
-            towerHealthAttacker.TakeDamage(damage, TowerHealthAttacker.DamageType.Physical);
+            towerHealthAttacker.TakeDamage(damage, TowerHealthAttacker.DamageType.Mage);
             Destroy(gameObject);
         }
     }

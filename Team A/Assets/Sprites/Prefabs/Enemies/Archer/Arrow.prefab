@@ -152,5 +152,5 @@ MonoBehaviour:
   damage: 10
   ArrowDefenderLayer:
     serializedVersion: 2
-    m_Bits: 2112
+    m_Bits: 0
   nonCollisionRadius: 10

@@ -11,9 +11,9 @@ public class MeleeEnemiesStateMachine : MonoBehaviour
 
     public State currentState;
     public float detectionRange;
-    public LayerMask enemiesLayer;
+    // public LayerMask enemiesLayer;
     public LayerMask defenderLayer; // Layer untuk defender, digunakan untuk mengabaikan tabrakan
-    public float nonCollisionRadius = 1f; // Jarak untuk mengabaikan tabrakan antar musuh
+    // public float nonCollisionRadius = 1f; // Jarak untuk mengabaikan tabrakan antar musuh
     public EnemyMovement enemyMovement;
     public EnemyAttack enemyAttack;
 
@@ -29,7 +29,7 @@ public class MeleeEnemiesStateMachine : MonoBehaviour
     void Update()
     {
         CheckStateConditions();
-        IgnoreCollisionsWithEnemies();
+        // IgnoreCollisionsWithEnemies();
     }
 
     void CheckStateConditions()
@@ -51,16 +51,16 @@ public class MeleeEnemiesStateMachine : MonoBehaviour
         }
     }
 
-    void IgnoreCollisionsWithEnemies()
-    {
-        // Mendeteksi musuh lain dalam radius tertentu
-        Collider[] enemies = Physics.OverlapSphere(transform.position, nonCollisionRadius, enemiesLayer);
-        foreach (var otherEnemy in enemies)
-        {
-            if (otherEnemy.gameObject != gameObject) // Pastikan tidak memilih collider sendiri
-            {
-                Physics.IgnoreCollision(GetComponent<Collider>(), otherEnemy, true);
-            }
-        }
-    }
+    // void IgnoreCollisionsWithEnemies()
+    // {
+    //     // Mendeteksi musuh lain dalam radius tertentu
+    //     Collider[] enemies = Physics.OverlapSphere(transform.position, nonCollisionRadius, enemiesLayer);
+    //     foreach (var otherEnemy in enemies)
+    //     {
+    //         if (otherEnemy.gameObject != gameObject) // Pastikan tidak memilih collider sendiri
+    //         {
+    //             Physics.IgnoreCollision(GetComponent<Collider>(), otherEnemy, true);
+    //         }
+    //     }
+    // }
 }

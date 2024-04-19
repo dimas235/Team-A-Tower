@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4846220213110851617}
   - component: {fileID: 919043778520726557}
   - component: {fileID: 7688520761049082134}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,5 +152,5 @@ MonoBehaviour:
   damage: 10
   ArrowAttackerLayer:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 0
   nonCollisionRadius: 1

@@ -2,22 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyStateMachineArcher : MonoBehaviour
+public class MageEnemiesStateMachine : MonoBehaviour
 {
     public EnemiesState enemiesState;
     public float detectionRange;
-    // public LayerMask enemiesLayer;
     public LayerMask defenderLayer;
-    // public float nonCollisionRadius = 1f;
     public EnemyMovement enemyMovement;
-    public Bow bowScript;
+    public MageEnemiesThrowing mageEnemiesThrowingScript;
 
     void Start()
     {
         enemiesState = EnemiesState.Walking;
-        if (bowScript != null)
+        if (mageEnemiesThrowingScript != null)
         {
-            bowScript.enabled = false;
+            mageEnemiesThrowingScript.enabled = false;
         }
     }
 
@@ -34,31 +32,17 @@ public class EnemyStateMachineArcher : MonoBehaviour
         {
             ChangeState(EnemiesState.Walking);
         }
-
-        // IgnoreCollisionsWithAttacker();
     }
 
     void ChangeState(EnemiesState newState)
     {
         enemiesState = newState;
-        bowScript.enabled = (newState == EnemiesState.Shooting);
+        mageEnemiesThrowingScript.enabled = (newState == EnemiesState.Shooting);
         if (enemyMovement != null)
         {
             enemyMovement.enabled = (newState == EnemiesState.Walking);
         }
     }
-
-    // void IgnoreCollisionsWithAttacker()
-    // {
-    //     Collider[] attackers = Physics.OverlapSphere(transform.position, nonCollisionRadius, enemiesLayer);
-    //     foreach (var otherAttacker in attackers)
-    //     {
-    //         if (otherAttacker.gameObject != gameObject)
-    //         {
-    //             Physics.IgnoreCollision(GetComponent<Collider>(), otherAttacker, true);
-    //         }
-    //     }
-    // }
 
     public enum EnemiesState
     {

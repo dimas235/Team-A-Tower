@@ -7,7 +7,7 @@ public class TroopAttack : MeleeAttack
         EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
         if (enemyHealth != null)
         {
-            enemyHealth.takeDamage(damage);
+            enemyHealth.TakeDamage(damage, EnemyHealth.DamageType.Physical);
             lastAttackTime = Time.time;
             return;
         }
@@ -15,7 +15,7 @@ public class TroopAttack : MeleeAttack
         TowerHealthAttacker towerHealthAttacker = target.GetComponent<TowerHealthAttacker>();
         if (towerHealthAttacker != null)
         {
-            towerHealthAttacker.takeDamage(damage);
+            towerHealthAttacker.TakeDamage(damage, TowerHealthAttacker.DamageType.Physical);
             lastAttackTime = Time.time;
         }
     }

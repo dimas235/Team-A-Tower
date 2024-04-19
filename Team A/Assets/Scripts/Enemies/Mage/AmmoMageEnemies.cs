@@ -2,15 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Arrow : MonoBehaviour
+public class AmmoMageEnemies : MonoBehaviour
 {
-    public Rigidbody arrowRb;
+
+    public Rigidbody ammoRb;
     public float speed;
     public float range;
     public int damage;
-    // public LayerMask ArrowDefenderLayer;
-
-    // public float nonCollisionRadius = 1f;
 
     private float timer;
 
@@ -21,9 +19,9 @@ public class Arrow : MonoBehaviour
 
     void FixedUpdate()
     {
-        arrowRb.velocity = Vector2.left * speed;
+        ammoRb.velocity = Vector3.left * speed; // Assuming the ammo moves to the left
         timer -= Time.deltaTime;
-        if (timer <= 0)
+        if(timer <= 0)
         {
             Destroy(gameObject);
         }
@@ -35,28 +33,19 @@ public class Arrow : MonoBehaviour
         DefenderHealth defenderHealth = collision.gameObject.GetComponent<DefenderHealth>();
         PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>(); // Menambahkan ini
 
-        // Collider[] hits = Physics.OverlapSphere(transform.position, nonCollisionRadius, ArrowDefenderLayer);
-        // foreach (var hit in hits)
-        // {
-        //     if (hit.gameObject != gameObject)
-        //     {
-        //         Physics.IgnoreCollision(GetComponent<Collider>(), hit, true);
-        //     }
-        // }
-
         if (towerHealthDefens)
         {
-            towerHealthDefens.TakeDamage(damage, TowerHealthDefens.DamageType.Physical);
+            towerHealthDefens.TakeDamage(damage, TowerHealthDefens.DamageType.Mage);
             Destroy(gameObject);
         }
         else if (playerHealth) // Sekarang `playerHealth` sudah didefinisikan
         {
-            playerHealth.TakeDamage(damage, PlayerHealth.DamageType.Physical);
+            playerHealth.TakeDamage(damage, PlayerHealth.DamageType.Mage);
             Destroy(gameObject);
         }
         else if (defenderHealth)
         {
-            defenderHealth.TakeDamage(damage, DefenderHealth.DamageType.Physical);
+            defenderHealth.TakeDamage(damage, DefenderHealth.DamageType.Mage);
             Destroy(gameObject);
         }
     }

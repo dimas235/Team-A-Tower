@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 3842243944788139758}
   - component: {fileID: 4846220213110851617}
   - component: {fileID: 919043778520726557}
-  - component: {fileID: -7086870872157181310}
+  - component: {fileID: -2254777544774436063}
   m_Layer: 11
-  m_Name: StoneMagePlayer
+  m_Name: StoneMageTroops
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -134,7 +134,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 12
   m_CollisionDetection: 0
---- !u!114 &-7086870872157181310
+--- !u!114 &-2254777544774436063
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,13 +143,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7040988754165475524}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97aec216c3059b741905c221698bc355, type: 3}
+  m_Script: {fileID: 11500000, guid: 08f2fcf7c8f847d4c960d8547cf3153c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mageRb: {fileID: 919043778520726557}
+  ammoRb: {fileID: 919043778520726557}
   speed: 5
-  range: 1
-  damage: 1
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 4608
+  range: 3
+  damage: 10
