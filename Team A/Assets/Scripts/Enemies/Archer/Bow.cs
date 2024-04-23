@@ -7,49 +7,45 @@ public class Bow : MonoBehaviour
     public float attackCooldown;
 
     private float lastAttackTime;
-    private EnemyStateMachineArcher stateMachine;
+    private EnemyHealth enemyHealth;  // Referensi ke EnemyHealth
 
     void Start()
     {
-        stateMachine = GetComponent<EnemyStateMachineArcher>();
         lastAttackTime = attackCooldown;
+        enemyHealth = GetComponentInParent<EnemyHealth>();  // Ambil referensi dari parent
     }
 
     void Update()
     {
-        if(stateMachine.enemiesState != EnemyStateMachineArcher.EnemiesState.Shooting)
+        if (!enabled || enemyHealth.isStunned)
         {
-            return;
+            return;  // Jangan lakukan apapun jika Bow tidak aktif atau musuh ter-stun
         }
 
         lastAttackTime -= Time.deltaTime;
-        if(lastAttackTime <= 0)
+        if (lastAttackTime <= 0)
         {
-            GameObject arrow = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
-            Collider arrowCollider = arrow.GetComponent<Collider>();
-            if(arrowCollider != null)
-            {
-                arrowCollider.enabled = false;
-            }
-
-            Collider parentCollider = GetComponentInParent<Collider>();
-            if(parentCollider != null)
-            {
-                Physics.IgnoreCollision(arrowCollider, parentCollider);
-            }
-
-            // Collider[] allEnemies = FindObjectsOfType<Collider>();
-            // foreach (var enemy in allEnemies)
-            // {
-            //     if(enemy.gameObject.layer == LayerMask.NameToLayer("Enemies"))
-            //     {
-            //         Physics.IgnoreCollision(arrowCollider, enemy);
-            //     }
-            // }
-
-            StartCoroutine(EnableColliderWhenPassed(arrow, arrowCollider));
+            ShootArrow();
             lastAttackTime = attackCooldown;
         }
+    }
+
+    private void ShootArrow()
+    {
+        GameObject arrow = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
+        Collider arrowCollider = arrow.GetComponent<Collider>();
+        if (arrowCollider != null)
+        {
+            arrowCollider.enabled = false;
+        }
+
+        Collider parentCollider = GetComponentInParent<Collider>();
+        if (parentCollider != null)
+        {
+            Physics.IgnoreCollision(arrowCollider, parentCollider);
+        }
+
+        StartCoroutine(EnableColliderWhenPassed(arrow, arrowCollider));
     }
 
     private IEnumerator EnableColliderWhenPassed(GameObject arrow, Collider arrowCollider)

@@ -1,36 +1,46 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MageTroopsStateMachine : MonoBehaviour
 {
+    public enum TroopsState
+    {
+        Walking,
+        Shooting
+    }
 
     public TroopsState troopsState;
     public float detectionRange;
     public LayerMask enemyLayer;
-
     public MageTroopsThrowing mageTroopsThrowingScript;
     public DefenderMovement defenderMovement;
+    private DefenderHealth defenderHealth;
 
     void Start()
     {
         troopsState = TroopsState.Walking;
-        if (mageTroopsThrowingScript != null)
-        {
-            mageTroopsThrowingScript.enabled = false;
-        }
+        defenderHealth = GetComponent<DefenderHealth>();
+        defenderHealth.OnStunEnded += HandleStunEnded; // Subscribe to the OnStunEnded event
+        mageTroopsThrowingScript.enabled = false;
     }
 
     void Update()
     {
+        if (defenderHealth.isStunned)
+        {
+            mageTroopsThrowingScript.enabled = false;
+            defenderMovement.enabled = false;
+            return;
+        }
+
         RaycastHit hit;
         bool enemyDetected = Physics.Raycast(transform.position, Vector2.right, out hit, detectionRange, enemyLayer);
 
-        if (troopsState == TroopsState.Walking && enemyDetected)
+        if (enemyDetected && !defenderHealth.isStunned)
         {
             ChangeState(TroopsState.Shooting);
         }
-        else if (!enemyDetected && troopsState == TroopsState.Shooting)
+        else if (!enemyDetected)
         {
             ChangeState(TroopsState.Walking);
         }
@@ -40,15 +50,19 @@ public class MageTroopsStateMachine : MonoBehaviour
     {
         troopsState = newState;
         mageTroopsThrowingScript.enabled = (newState == TroopsState.Shooting);
-        if (defenderMovement != null)
+        defenderMovement.enabled = (newState == TroopsState.Walking);
+    }
+
+    private void HandleStunEnded()
+    {
+        if (Physics.Raycast(transform.position, Vector2.right, detectionRange, enemyLayer))
         {
-            defenderMovement.enabled = (newState == TroopsState.Walking);
+            ChangeState(TroopsState.Shooting);
         }
     }
 
-    public enum TroopsState
+    void OnDestroy()
     {
-        Walking,
-        Shooting
+        defenderHealth.OnStunEnded -= HandleStunEnded; // Unsubscribe to prevent memory leaks
     }
 }

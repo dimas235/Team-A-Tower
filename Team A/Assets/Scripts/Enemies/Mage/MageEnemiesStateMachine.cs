@@ -9,10 +9,13 @@ public class MageEnemiesStateMachine : MonoBehaviour
     public LayerMask defenderLayer;
     public EnemyMovement enemyMovement;
     public MageEnemiesThrowing mageEnemiesThrowingScript;
+    private EnemyHealth enemyHealth;  // Referensi ke EnemyHealth
 
     void Start()
     {
         enemiesState = EnemiesState.Walking;
+        enemyHealth = GetComponent<EnemyHealth>();
+        enemyHealth.OnStunEnded += HandleStunEnded;  // Subscribe ke event OnStunEnded
         if (mageEnemiesThrowingScript != null)
         {
             mageEnemiesThrowingScript.enabled = false;
@@ -21,6 +24,13 @@ public class MageEnemiesStateMachine : MonoBehaviour
 
     void Update()
     {
+        if (enemyHealth.isStunned)
+        {
+            mageEnemiesThrowingScript.enabled = false;  // Nonaktifkan mageEnemiesThrowingScript jika musuh ter-stun
+            enemyMovement.enabled = false;  // Nonaktifkan pergerakan jika musuh ter-stun
+            return;  // Keluar dari update jika musuh ter-stun
+        }
+
         RaycastHit hit;
         bool defenderDetected = Physics.Raycast(transform.position, Vector2.left, out hit, detectionRange, defenderLayer);
 
@@ -48,5 +58,18 @@ public class MageEnemiesStateMachine : MonoBehaviour
     {
         Walking,
         Shooting
+    }
+
+    private void HandleStunEnded()
+    {
+        if (Physics.Raycast(transform.position, Vector2.left, detectionRange, defenderLayer))
+        {
+            ChangeState(EnemiesState.Shooting);
+        }
+    }
+
+    void OnDestroy()
+    {
+        enemyHealth.OnStunEnded -= HandleStunEnded;  // Unsubscribe dari event OnStunEnded
     }
 }

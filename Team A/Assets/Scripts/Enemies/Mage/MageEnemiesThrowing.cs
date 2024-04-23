@@ -2,26 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class MageEnemiesThrowing : MonoBehaviour
 {
     public GameObject ammoPrefab;
     public float coolDown;
 
-
     private float timer;
     private MageEnemiesStateMachine mageEnemiesStateMachine;
+    private EnemyHealth enemyHealth;  // Referensi ke EnemyHealth
 
     void Start()
     {
         mageEnemiesStateMachine = GetComponent<MageEnemiesStateMachine>();
+        enemyHealth = GetComponent<EnemyHealth>();  // Setel referensi EnemyHealth
         timer = coolDown;
-
     }
 
     void Update()
     {
-        if (mageEnemiesStateMachine.enemiesState != MageEnemiesStateMachine.EnemiesState.Shooting)
+        if (mageEnemiesStateMachine.enemiesState != MageEnemiesStateMachine.EnemiesState.Shooting || enemyHealth.isStunned)
         {
             return;
         }
@@ -29,30 +28,27 @@ public class MageEnemiesThrowing : MonoBehaviour
         timer -= Time.deltaTime;
         if (timer <= 0)
         {
-            GameObject ammo = Instantiate(ammoPrefab, transform.position, Quaternion.identity);
-            Collider ammoCollider = ammo.GetComponent<Collider>();
-            if (ammoCollider != null)
-            {
-                ammoCollider.enabled = false;
-            }
-
-            Collider parentCollider = GetComponentInParent<Collider>();
-            if (parentCollider != null)
-            {
-                Physics.IgnoreCollision(ammoCollider, parentCollider);
-            }
-
-            // Collider[] allDefenders = FindObjectsOfType<Collider>();
-            // foreach (var defender in allDefenders)
-            // {
-            //     if (defender.gameObject.layer == LayerMask.NameToLayer("Enemies"))
-            //     {
-            //         Physics.IgnoreCollision(ammoCollider, defender);
-            //     }
-            // }
-            StartCoroutine(EnableColliderWhenPassed(ammo, ammoCollider));
+            FireAmmo();
             timer = coolDown;
         }
+    }
+
+    private void FireAmmo()
+    {
+        GameObject ammo = Instantiate(ammoPrefab, transform.position, Quaternion.identity);
+        Collider ammoCollider = ammo.GetComponent<Collider>();
+        if (ammoCollider != null)
+        {
+            ammoCollider.enabled = false;
+        }
+
+        Collider parentCollider = GetComponentInParent<Collider>();
+        if (parentCollider != null)
+        {
+            Physics.IgnoreCollision(ammoCollider, parentCollider);
+        }
+
+        StartCoroutine(EnableColliderWhenPassed(ammo, ammoCollider));
     }
 
     private IEnumerator EnableColliderWhenPassed(GameObject ammo, Collider ammoCollider)

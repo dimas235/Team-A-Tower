@@ -11,15 +11,16 @@ public class MeleeEnemiesStateMachine : MonoBehaviour
 
     public State currentState;
     public float detectionRange;
-    // public LayerMask enemiesLayer;
-    public LayerMask defenderLayer; // Layer untuk defender, digunakan untuk mengabaikan tabrakan
-    // public float nonCollisionRadius = 1f; // Jarak untuk mengabaikan tabrakan antar musuh
+    public LayerMask defenderLayer;
     public EnemyMovement enemyMovement;
     public EnemyAttack enemyAttack;
+    private EnemyHealth enemyHealth;  // Menambahkan referensi ke EnemyHealth
 
     void Start()
     {
         currentState = State.Walking;
+        enemyHealth = GetComponent<EnemyHealth>();  // Menginisialisasi enemyHealth
+        enemyHealth.OnStunEnded += ReactiveAfterStun;
         if (enemyAttack != null)
         {
             enemyAttack.enabled = false;
@@ -28,8 +29,17 @@ public class MeleeEnemiesStateMachine : MonoBehaviour
 
     void Update()
     {
-        CheckStateConditions();
-        // IgnoreCollisionsWithEnemies();
+        if (enemyHealth.isStunned)
+        {
+            // Jika musuh ter-stun, nonaktifkan serangan dan gerakan, serta tetap dalam status ini
+            enemyAttack.enabled = false;
+            enemyMovement.enabled = false;
+            return;
+        }
+        else
+        {
+            CheckStateConditions();
+        }
     }
 
     void CheckStateConditions()
@@ -42,25 +52,29 @@ public class MeleeEnemiesStateMachine : MonoBehaviour
             currentState = State.Attacking;
             enemyAttack.enabled = true;
             enemyMovement.enabled = false;
+            ChangeState(State.Attacking);
         }
         else if (!defenderDetected && currentState == State.Attacking)
         {
             currentState = State.Walking;
             enemyAttack.enabled = false;
             enemyMovement.enabled = true;
+            ChangeState(State.Walking);
         }
     }
 
-    // void IgnoreCollisionsWithEnemies()
-    // {
-    //     // Mendeteksi musuh lain dalam radius tertentu
-    //     Collider[] enemies = Physics.OverlapSphere(transform.position, nonCollisionRadius, enemiesLayer);
-    //     foreach (var otherEnemy in enemies)
-    //     {
-    //         if (otherEnemy.gameObject != gameObject) // Pastikan tidak memilih collider sendiri
-    //         {
-    //             Physics.IgnoreCollision(GetComponent<Collider>(), otherEnemy, true);
-    //         }
-    //     }
-    // }
+    private void ReactiveAfterStun()
+    {
+        enemyAttack.enabled = true;
+    }
+
+    void ChangeState(State newState)
+    {
+        currentState = newState;
+        enemyAttack.enabled = (newState == State.Attacking);
+        if (enemyMovement != null)
+        {
+            enemyMovement.enabled = (newState == State.Walking);
+        }
+    }
 }

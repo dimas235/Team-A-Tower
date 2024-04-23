@@ -16,10 +16,12 @@ public class MeleeTroopsStateMachine : MonoBehaviour
     // public float nonCollisionRadius = 1f; // Jarak untuk mengabaikan tabrakan antar musuh
     public DefenderMovement troopMovement;
     public TroopAttack troopAttack; // Class yang mirip dengan EnemyAttack tetapi untuk Troops
-
+    private DefenderHealth troopHealth; // Menambahkan referensi ke TroopHealth
     void Start()
     {
         currentState = State.Walking;
+        troopHealth = GetComponent<DefenderHealth>(); // Menginisialisasi troopHealth
+        troopHealth.OnStunEnded += ReactiveAfterStun;
         if (troopAttack != null)
         {
             troopAttack.enabled = false;
@@ -28,8 +30,17 @@ public class MeleeTroopsStateMachine : MonoBehaviour
 
     void Update()
     {
-        CheckStateConditions();
-        // IgnoreCollisionsWithDefender();
+        if (troopHealth.isStunned)
+        {
+            // Jika troop ter-stun, nonaktifkan serangan dan gerakan, serta tetap dalam status ini
+            troopAttack.enabled = false;
+            troopMovement.enabled = false;
+            return;
+        }
+        else
+        {
+            CheckStateConditions();
+        }
     }
 
     void CheckStateConditions()
@@ -42,14 +53,33 @@ public class MeleeTroopsStateMachine : MonoBehaviour
             currentState = State.Attacking;
             troopAttack.enabled = true;
             troopMovement.enabled = false;
+            ChangeState(State.Attacking);
         }
         else if (!enemyDetected && currentState == State.Attacking)
         {
             currentState = State.Walking;
             troopAttack.enabled = false;
             troopMovement.enabled = true;
+            ChangeState(State.Walking);
         }
     }
+
+    private void ReactiveAfterStun()
+    {
+        troopAttack.enabled = true;
+    }
+
+    void ChangeState(State newState)
+    {
+        currentState = newState;
+        troopAttack.enabled = (newState == State.Attacking);
+        if (troopMovement != null)
+        {
+            troopMovement.enabled = (newState == State.Walking);
+        }
+    }
+
+
 
     // void IgnoreCollisionsWithDefender()
     // {

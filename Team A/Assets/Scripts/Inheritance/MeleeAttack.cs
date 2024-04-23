@@ -6,16 +6,11 @@ public abstract class MeleeAttack : MonoBehaviour
     public float attackCooldown = 0.5f;
     public float attackRange = 1.5f;
     public LayerMask targetLayer;
-    protected float lastAttackTime;
-
-    protected virtual void Start()
-    {
-        lastAttackTime = -attackCooldown;
-    }
+    protected float lastAttackTime = -1;
 
     protected virtual void Update()
     {
-        if (Time.time - lastAttackTime >= attackCooldown)
+        if (Time.time - lastAttackTime >= attackCooldown && (!GetComponent<EnemyHealth>() || !GetComponent<EnemyHealth>().isStunned))
         {
             Collider[] hits = Physics.OverlapSphere(transform.position, attackRange, targetLayer);
             foreach (var hit in hits)

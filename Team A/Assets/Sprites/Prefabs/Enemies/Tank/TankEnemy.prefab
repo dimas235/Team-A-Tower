@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6260556612959462239
+--- !u!1 &3580833299467004204
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,52 +8,52 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8206942521047394579}
-  - component: {fileID: 2184384946970879744}
-  - component: {fileID: 765575599414346303}
-  - component: {fileID: 1427343018768060137}
-  - component: {fileID: 168509265414530804}
-  - component: {fileID: 1720040568083232364}
-  - component: {fileID: 2972078975977533676}
-  - component: {fileID: 940122462586317749}
-  - component: {fileID: 8183455406960011880}
-  m_Layer: 7
-  m_Name: MeleeTroops
+  - component: {fileID: 6574354096753975302}
+  - component: {fileID: 1865556504983036352}
+  - component: {fileID: 5633551867359466232}
+  - component: {fileID: 4720897008642663987}
+  - component: {fileID: 5576552809988889649}
+  - component: {fileID: 3434202727616218844}
+  - component: {fileID: 2173694920409617748}
+  - component: {fileID: 6249490757289562271}
+  - component: {fileID: 10653509476201428}
+  m_Layer: 12
+  m_Name: TankEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8206942521047394579
+--- !u!4 &6574354096753975302
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6260556612959462239}
+  m_GameObject: {fileID: 3580833299467004204}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.460037, y: 0.42134115, z: -7.138}
+  m_LocalPosition: {x: 4.3, y: 0.41, z: -7.09}
   m_LocalScale: {x: 0.291174, y: 0.291174, z: 0.291174}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &2184384946970879744
+--- !u!33 &1865556504983036352
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6260556612959462239}
+  m_GameObject: {fileID: 3580833299467004204}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &765575599414346303
+--- !u!23 &5633551867359466232
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6260556612959462239}
+  m_GameObject: {fileID: 3580833299467004204}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -67,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 45a92da0cb94eca40a3650b8305c2811, type: 2}
+  - {fileID: 2100000, guid: 04d71b14400596c40ab3b58ea3890463, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -89,13 +89,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &1427343018768060137
+--- !u!65 &4720897008642663987
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6260556612959462239}
+  m_GameObject: {fileID: 3580833299467004204}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -110,13 +110,13 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &168509265414530804
+--- !u!54 &5576552809988889649
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6260556612959462239}
+  m_GameObject: {fileID: 3580833299467004204}
   serializedVersion: 4
   m_Mass: 15
   m_Drag: 0
@@ -135,72 +135,75 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 120
   m_CollisionDetection: 0
---- !u!114 &1720040568083232364
+--- !u!114 &3434202727616218844
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6260556612959462239}
+  m_GameObject: {fileID: 3580833299467004204}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adf1ef84e52818d41ba6359d4ed13360, type: 3}
+  m_Script: {fileID: 11500000, guid: c48082f357535ae489aaca7aa0a0b847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 30000
+  maxHealth: 30000
+  popUpDamagePrefabPhysical: {fileID: 4095716049173766869, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
+  popUpDamagePrefabMage: {fileID: 4095716049173766869, guid: 62bd6fc259b38a742a1945138f781f6f, type: 3}
+  isStunned: 0
+  stunDuration: 0
+--- !u!114 &2173694920409617748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3580833299467004204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8737df42b4fe5d4a9318b6cd0629d4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyRb: {fileID: 5576552809988889649}
   speed: 1
-  defenderRb: {fileID: 168509265414530804}
---- !u!114 &2972078975977533676
+--- !u!114 &6249490757289562271
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6260556612959462239}
+  m_GameObject: {fileID: 3580833299467004204}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67608efd8047b034989d3695312a6069, type: 3}
+  m_Script: {fileID: 11500000, guid: d128905dfa448d248b3732baacf9085c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 50
+  damage: 1
   attackCooldown: 4
   attackRange: 0.3
   targetLayer:
     serializedVersion: 2
-    m_Bits: 4608
---- !u!114 &940122462586317749
+    m_Bits: 8576
+  stunDuration: 1
+--- !u!114 &10653509476201428
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6260556612959462239}
+  m_GameObject: {fileID: 3580833299467004204}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2769f236e19091c469844985b60740a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 100
-  maxHealth: 100
-  popUpDamagePrefabPhysical: {fileID: 4095716049173766869, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
-  popUpDamagePrefabMage: {fileID: 4095716049173766869, guid: 62bd6fc259b38a742a1945138f781f6f, type: 3}
---- !u!114 &8183455406960011880
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6260556612959462239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14d050ab87e4fe84f8e04803f859c50e, type: 3}
+  m_Script: {fileID: 11500000, guid: d9fff9584e933884dbb529ad3bf4199e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
   detectionRange: 0.3
-  enemyLayer:
+  defenderLayer:
     serializedVersion: 2
-    m_Bits: 4608
-  troopMovement: {fileID: 1720040568083232364}
-  troopAttack: {fileID: 2972078975977533676}
+    m_Bits: 8576
+  enemyMovement: {fileID: 2173694920409617748}
+  tankEnemiesAttack: {fileID: 6249490757289562271}

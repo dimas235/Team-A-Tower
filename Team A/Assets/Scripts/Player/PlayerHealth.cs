@@ -13,6 +13,10 @@ public class PlayerHealth : MonoBehaviour
     public GameObject popUpDamagePrefabPhysical;
     public GameObject popUpDamagePrefabMage;
 
+    public bool isStunned = false;
+    public float stunDuration = 0;
+    public event System.Action OnStunEnded;
+
     public enum DamageType
     {
         Physical,
@@ -50,6 +54,27 @@ public class PlayerHealth : MonoBehaviour
         {
             Die();
         }
+    }
+
+    public void ApplyStun(float duration)
+    {
+        if (duration > 0 && !isStunned)
+        {
+            isStunned = true;
+            stunDuration = duration;
+            StartCoroutine(StunCountdown(duration));
+        }
+        else if (duration == 0)
+        {
+            isStunned = false;
+        }
+    }
+
+    private IEnumerator StunCountdown(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        isStunned = false;
+        OnStunEnded?.Invoke();
     }
 
     // public void ResetHealth()

@@ -8,50 +8,47 @@ public class Throwing : MonoBehaviour
 
     private float timer;
     private StateMachine stateMachineScript; // Skrip StateMachine yang terkait
+    private DefenderHealth defenderHealth; // Komponen kesehatan defender
 
     void Start()
     {
         stateMachineScript = GetComponentInParent<StateMachine>(); // Mendapatkan skrip StateMachine dari parent GameObject
+        defenderHealth = GetComponentInParent<DefenderHealth>(); // Mendapatkan komponen DefenderHealth
         timer = coolDown;    
     }
 
     void Update()
     {
-        if(stateMachineScript.troopsState != StateMachine.TroopsState.Shooting)
+        if (stateMachineScript.troopsState != StateMachine.TroopsState.Shooting || defenderHealth.isStunned)
         {
-            return; // Jangan lempar batu jika bukan dalam keadaan Shooting
+            return; // Jangan lempar batu jika bukan dalam keadaan Shooting atau jika unit ter-stun
         }
 
         timer -= Time.deltaTime;
-        if(timer <= 0)
+        if (timer <= 0)
         {
-            GameObject stone = Instantiate(stonePrefab, transform.position, Quaternion.identity);
-            Collider stoneCollider = stone.GetComponent<Collider>();
-            if(stoneCollider != null)
-            {
-                stoneCollider.enabled = false;
-            }
-
-            // Mengabaikan tabrakan dengan defender yang mengspawn batu
-            Collider parentCollider = GetComponentInParent<Collider>();
-            if(parentCollider != null)
-            {
-                Physics.IgnoreCollision(stoneCollider, parentCollider);
-            }
-
-            // // Mengabaikan tabrakan dengan semua defender lainnya
-            // Collider[] allDefenders = FindObjectsOfType<Collider>(); // Cari semua Collider yang mungkin adalah defender
-            // foreach (var defender in allDefenders)
-            // {
-            //     if(defender.gameObject.layer == LayerMask.NameToLayer("Troops")) // Ganti "DefenderLayer" dengan nama layer defender Anda
-            //     {
-            //         Physics.IgnoreCollision(stoneCollider, defender);
-            //     }
-            // }
-
-            StartCoroutine(EnableColliderWhenPassed(stone, stoneCollider));
+            LaunchStone();
             timer = coolDown;
-        }   
+        }
+    }
+
+    private void LaunchStone()
+    {
+        GameObject stone = Instantiate(stonePrefab, transform.position, Quaternion.identity);
+        Collider stoneCollider = stone.GetComponent<Collider>();
+        if (stoneCollider != null)
+        {
+            stoneCollider.enabled = false;
+        }
+
+        // Mengabaikan tabrakan dengan defender yang mengspawn batu
+        Collider parentCollider = GetComponentInParent<Collider>();
+        if (parentCollider != null)
+        {
+            Physics.IgnoreCollision(stoneCollider, parentCollider);
+        }
+
+        StartCoroutine(EnableColliderWhenPassed(stone, stoneCollider));
     }
 
     private IEnumerator EnableColliderWhenPassed(GameObject stone, Collider stoneCollider)

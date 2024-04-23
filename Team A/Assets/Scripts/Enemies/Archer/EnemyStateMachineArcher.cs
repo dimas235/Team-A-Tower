@@ -1,20 +1,25 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyStateMachineArcher : MonoBehaviour
 {
+    public enum EnemiesState
+    {
+        Walking,
+        Shooting
+    }
+
     public EnemiesState enemiesState;
     public float detectionRange;
-    // public LayerMask enemiesLayer;
     public LayerMask defenderLayer;
-    // public float nonCollisionRadius = 1f;
     public EnemyMovement enemyMovement;
     public Bow bowScript;
+    private EnemyHealth enemyHealth;  // Referensi ke EnemyHealth
 
     void Start()
     {
         enemiesState = EnemiesState.Walking;
+        enemyHealth = GetComponent<EnemyHealth>();  // Inisialisasi EnemyHealth
         if (bowScript != null)
         {
             bowScript.enabled = false;
@@ -23,6 +28,13 @@ public class EnemyStateMachineArcher : MonoBehaviour
 
     void Update()
     {
+        if (enemyHealth.isStunned)
+        {
+            bowScript.enabled = false;  // Nonaktifkan bowScript jika musuh ter-stun
+            enemyMovement.enabled = false;  // Nonaktifkan pergerakan jika musuh ter-stun
+            return;  // Keluar dari update jika musuh ter-stun
+        }
+
         RaycastHit hit;
         bool defenderDetected = Physics.Raycast(transform.position, Vector2.left, out hit, detectionRange, defenderLayer);
 
@@ -34,8 +46,6 @@ public class EnemyStateMachineArcher : MonoBehaviour
         {
             ChangeState(EnemiesState.Walking);
         }
-
-        // IgnoreCollisionsWithAttacker();
     }
 
     void ChangeState(EnemiesState newState)
@@ -46,23 +56,5 @@ public class EnemyStateMachineArcher : MonoBehaviour
         {
             enemyMovement.enabled = (newState == EnemiesState.Walking);
         }
-    }
-
-    // void IgnoreCollisionsWithAttacker()
-    // {
-    //     Collider[] attackers = Physics.OverlapSphere(transform.position, nonCollisionRadius, enemiesLayer);
-    //     foreach (var otherAttacker in attackers)
-    //     {
-    //         if (otherAttacker.gameObject != gameObject)
-    //         {
-    //             Physics.IgnoreCollision(GetComponent<Collider>(), otherAttacker, true);
-    //         }
-    //     }
-    // }
-
-    public enum EnemiesState
-    {
-        Walking,
-        Shooting
     }
 }

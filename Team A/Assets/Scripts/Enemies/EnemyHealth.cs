@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -7,9 +6,11 @@ public class EnemyHealth : MonoBehaviour
 {
     public int health;
     public int maxHealth = 100;
-    public GameObject popUpDamagePrefabPhysical; // Prefab untuk damage fisik
-    public GameObject popUpDamagePrefabMage;     // Prefab untuk damage mage
-    public int coinValue = 5; // Jumlah coin yang diberikan saat musuh terbunuh
+    public GameObject popUpDamagePrefabPhysical;
+    public GameObject popUpDamagePrefabMage;
+    public bool isStunned = false;
+    public float stunDuration = 0;
+    public event System.Action OnStunEnded;
 
     public enum DamageType
     {
@@ -25,8 +26,7 @@ public class EnemyHealth : MonoBehaviour
     public void TakeDamage(int damage, DamageType type)
     {
         health -= damage;
-        
-        // Menentukan prefab berdasarkan jenis damage
+
         GameObject selectedPrefab = type == DamageType.Mage ? popUpDamagePrefabMage : popUpDamagePrefabPhysical;
         if (selectedPrefab != null)
         {
@@ -44,14 +44,30 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
+    public void ApplyStun(float duration)
+    {
+        if (duration > 0 && !isStunned)
+        {
+            isStunned = true;
+            stunDuration = duration;
+            StartCoroutine(StunCountdown(duration));
+        }
+        else if (duration == 0)
+        {
+            isStunned = false;
+        }
+    }
+
+    private IEnumerator StunCountdown(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        isStunned = false;
+        OnStunEnded?.Invoke();
+        
+    }
+
     private void Die()
     {
-        CoinManager coinManager = FindObjectOfType<CoinManager>();
-        if (coinManager != null)
-        {
-            coinManager.OnEnemyKilled(coinValue);
-        }
-
         Destroy(gameObject);
     }
 }

@@ -4,55 +4,51 @@ using UnityEngine;
 
 public class MageTroopsThrowing : MonoBehaviour
 {
-    public GameObject fireballPrefab; // Prefab dari fireball yang akan dilempar
+    public GameObject fireballPrefab;
     public float coolDown;
 
     private float timer;
-    private MageTroopsStateMachine mageTroopsStateMachineScript; // Skrip MageTroopsStateMachine yang terkait
+    private MageTroopsStateMachine mageTroopsStateMachineScript;
+    private DefenderHealth defenderHealth;  // Referensi ke kesehatan
 
     void Start()
     {
-        mageTroopsStateMachineScript = GetComponentInParent<MageTroopsStateMachine>(); // Mendapatkan skrip MageTroopsStateMachine dari parent GameObject
-        timer = coolDown;    
+        mageTroopsStateMachineScript = GetComponentInParent<MageTroopsStateMachine>();
+        defenderHealth = GetComponentInParent<DefenderHealth>();  // Mendapatkan referensi kesehatan dari parent
+        timer = coolDown;
     }
 
     void Update()
     {
-        if(mageTroopsStateMachineScript.troopsState != MageTroopsStateMachine.TroopsState.Shooting)
+        if (mageTroopsStateMachineScript.troopsState != MageTroopsStateMachine.TroopsState.Shooting || defenderHealth.isStunned)
         {
-            return; // Jangan lempar fireball jika bukan dalam keadaan Shooting
+            return;  // Jangan lempar fireball jika dalam keadaan stun atau bukan Shooting
         }
 
         timer -= Time.deltaTime;
-        if(timer <= 0)
+        if (timer <= 0)
         {
-            GameObject fireball = Instantiate(fireballPrefab, transform.position, Quaternion.identity);
-            Collider fireballCollider = fireball.GetComponent<Collider>();
-            if(fireballCollider != null)
-            {
-                fireballCollider.enabled = false;
-            }
-
-            // Mengabaikan tabrakan dengan defender yang mengspawn fireball
-            Collider parentCollider = GetComponentInParent<Collider>();
-            if(parentCollider != null)
-            {
-                Physics.IgnoreCollision(fireballCollider, parentCollider);
-            }
-
-            // // Mengabaikan tabrakan dengan semua defender lainnya
-            // Collider[] allDefenders = FindObjectsOfType<Collider>(); // Cari semua Collider yang mungkin adalah defender
-            // foreach (var defender in allDefenders)
-            // {
-            //     if(defender.gameObject.layer == LayerMask.NameToLayer("Troops")) // Ganti "DefenderLayer" dengan nama layer defender Anda
-            //     {
-            //         Physics.IgnoreCollision(fireballCollider, defender);
-            //     }
-            // }
-
-            StartCoroutine(EnableColliderWhenPassed(fireball, fireballCollider));
+            LaunchFireball();
             timer = coolDown;
-        }   
+        }
+    }
+
+    private void LaunchFireball()
+    {
+        GameObject fireball = Instantiate(fireballPrefab, transform.position, Quaternion.identity);
+        Collider fireballCollider = fireball.GetComponent<Collider>();
+        if (fireballCollider != null)
+        {
+            fireballCollider.enabled = false;
+        }
+
+        Collider parentCollider = GetComponentInParent<Collider>();
+        if (parentCollider != null)
+        {
+            Physics.IgnoreCollision(fireballCollider, parentCollider);
+        }
+
+        StartCoroutine(EnableColliderWhenPassed(fireball, fireballCollider));
     }
 
     private IEnumerator EnableColliderWhenPassed(GameObject fireball, Collider fireballCollider)
