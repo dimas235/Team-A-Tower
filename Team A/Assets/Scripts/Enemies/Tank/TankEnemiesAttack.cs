@@ -23,5 +23,12 @@ public class TankEnemiesAttack : MeleeAttack
             towerHealthDefens.TakeDamage(damage, TowerHealthDefens.DamageType.Physical);
             lastAttackTime = Time.time;
         }
+
+        PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
+        if (playerHealth != null)
+        {
+            playerHealth.TakeDamage(damage, PlayerHealth.DamageType.Physical);
+            lastAttackTime = Time.time;
+        }
     }
 }
