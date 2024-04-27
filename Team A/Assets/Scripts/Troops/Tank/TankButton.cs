@@ -1,9 +1,12 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MeleeDefenderButton : DefenderButton
+public class TankButton : DefenderButton
+
 {
-    public GameObject meleeDefenderPrefab; // Tentukan prefab untuk defender melee di Unity Editor
+    public GameObject tankPrefab; // Tentukan prefab untuk tank di Unity Editor
 
     private void OnEnable()
     {
@@ -17,7 +20,7 @@ public class MeleeDefenderButton : DefenderButton
 
     protected override void SpawnDefender()
     {
-        var data = Instantiate(meleeDefenderPrefab, spawnPoint.position, Quaternion.identity);
+        var data = Instantiate(tankPrefab, transform.position, Quaternion.identity);
         GameManager.instance.defenders.Add(data);
     }
 }

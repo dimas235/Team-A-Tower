@@ -73,6 +73,7 @@ public class DefenderHealth : MonoBehaviour
 
     private void Die()
     {
+        GameManager.instance.defenders.Remove(gameObject); 
         Destroy(gameObject);
     }
 }

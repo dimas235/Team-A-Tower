@@ -8,38 +8,58 @@ public class AmmoMageTroops : MonoBehaviour
     public float speed;
     public float range;
     public int damage;
+    public int maxHits = 3;  // Jumlah maksimal hit sebelum proyektil hancur
 
     private float timer;
+    private int hitCount;  // Menghitung berapa kali proyektil telah mengenai musuh
 
     void Start()
     {
-        timer = range;
+        timer = range;  // Timer untuk autodestruksi berdasarkan jangkauan
+        // Pastikan collider proyektil adalah trigger
+        Collider collider = GetComponent<Collider>();
+        if (collider != null)
+        {
+            collider.isTrigger = true;
+        }
     }
 
     void FixedUpdate()
     {
-        ammoRb.velocity = Vector3.right * speed; // Assuming the ammo moves to the right
+        ammoRb.velocity = Vector3.right * speed; // Asumsi proyektil bergerak ke kanan
         timer -= Time.deltaTime;
-        if(timer <= 0)
+        if (timer <= 0)
         {
-            Destroy(gameObject);
+            Destroy(gameObject);  // Hancurkan proyektil jika telah mencapai batas jangkauan
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        EnemyHealth enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();
-        TowerHealthAttacker towerHealthAttacker = collision.gameObject.GetComponent<TowerHealthAttacker>();
+        // Memeriksa jika objek yang bertabrakan adalah musuh atau menara
+        EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
+        TowerHealthAttacker towerHealthAttacker = other.GetComponent<TowerHealthAttacker>();
 
         if (enemyHealth != null)
         {
             enemyHealth.TakeDamage(damage, EnemyHealth.DamageType.Mage);
-            Destroy(gameObject);
+            hitCount++;  // Meningkatkan jumlah hit
+            CheckForDestruction();
         }
         else if (towerHealthAttacker != null)
         {
             towerHealthAttacker.TakeDamage(damage, TowerHealthAttacker.DamageType.Mage);
-            Destroy(gameObject);
+            hitCount++;  // Meningkatkan jumlah hit
+            CheckForDestruction();
+        }
+    }
+
+    // Memeriksa apakah jumlah hit telah mencapai batas maksimum
+    private void CheckForDestruction()
+    {
+        if (hitCount >= maxHits)
+        {
+            Destroy(gameObject);  // Hancurkan proyektil jika telah mencapai jumlah maksimum hit
         }
     }
 }
