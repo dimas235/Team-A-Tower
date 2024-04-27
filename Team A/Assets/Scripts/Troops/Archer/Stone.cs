@@ -31,13 +31,13 @@ public class Stone : MonoBehaviour
 
         if (enemyHealth != null)
         {
-            // Menggunakan versi yang benar dari TakeDamage dengan enum DamageType
+            
             enemyHealth.TakeDamage(damage, EnemyHealth.DamageType.Physical);
             Destroy(gameObject);
         }
         else if (towerHealthAttacker != null)
         {
-            // Panggil dengan huruf 'T' besar sesuai dengan konvensi
+            
             towerHealthAttacker.TakeDamage(damage, TowerHealthAttacker.DamageType.Physical);
             Destroy(gameObject);
         }
