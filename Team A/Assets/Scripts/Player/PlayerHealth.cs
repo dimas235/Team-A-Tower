@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -17,6 +16,11 @@ public class PlayerHealth : MonoBehaviour
     public float stunDuration = 0;
     public event System.Action OnStunEnded;
 
+    public float regenRate = 1;          // Kesehatan yang diregen per detik.
+    public float regenDelay = 5;         // Waktu delay dalam detik sebelum regenerasi dimulai.
+    private Coroutine regenCoroutine;    // Coroutine untuk regenerasi kesehatan.
+    private float lastDamageTime;        // Waktu terakhir pemain terkena serangan.
+
     public enum DamageType
     {
         Physical,
@@ -30,6 +34,7 @@ public class PlayerHealth : MonoBehaviour
         slider.value = health;
         UpdateHealthText();
         slider.interactable = false;
+        lastDamageTime = Time.time;
     }
 
     public void TakeDamage(int damage, DamageType type)
@@ -38,6 +43,7 @@ public class PlayerHealth : MonoBehaviour
         health = Mathf.Clamp(health, 0, maxHealth);
         slider.value = health;
         UpdateHealthText();
+        lastDamageTime = Time.time;
 
         GameObject selectedPrefab = type == DamageType.Mage ? popUpDamagePrefabMage : popUpDamagePrefabPhysical;
         if (selectedPrefab != null)
@@ -53,6 +59,28 @@ public class PlayerHealth : MonoBehaviour
         if (health <= 0)
         {
             Die();
+        }
+        else
+        {
+            if (regenCoroutine != null)
+            {
+                StopCoroutine(regenCoroutine);
+            }
+            regenCoroutine = StartCoroutine(DelayRegenHealth());
+        }
+    }
+
+    private IEnumerator DelayRegenHealth()
+    {
+        yield return new WaitForSeconds(regenDelay);
+
+        while (health < maxHealth && (Time.time - lastDamageTime >= regenDelay))
+        {
+            health += Mathf.FloorToInt(regenRate);
+            health = Mathf.Clamp(health, 0, maxHealth);
+            slider.value = health;
+            UpdateHealthText();
+            yield return new WaitForSeconds(1);
         }
     }
 
@@ -77,21 +105,9 @@ public class PlayerHealth : MonoBehaviour
         OnStunEnded?.Invoke();
     }
 
-    // public void ResetHealth()
-    // {
-    //     health = maxHealth;
-    //     UpdateHealthText();
-    // }
-
     private void Die()
     {
-        // ResetHealth();
-        // gameObject.SetActive(false);
-        // onPlayerDestroyed.Invoke();
-        // if (slider.gameObject != null)
-        // {
-        //     Destroy(slider.gameObject);
-        // }
+        
     }
 
     private void UpdateHealthText()
