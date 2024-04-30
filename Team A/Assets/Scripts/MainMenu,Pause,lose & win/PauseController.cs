@@ -3,33 +3,54 @@ using UnityEngine.SceneManagement;
 
 public class PauseController : MonoBehaviour
 {
-    public GameObject pausePanel; // Reference ke panel pause
-    public GameObject gameUI; // Reference ke UI in-game
+    public GameObject pausePanel; // Reference to the pause panel
+    public GameObject gameUI; // Reference to the in-game UI
+
+    private bool isPaused = false; // To track the pause state
 
     void Start()
     {
-        // Pastikan panel pause tidak aktif ketika game dimulai
+        // Ensure the pause panel is not active when the game starts
         pausePanel.SetActive(false);
+    }
+
+    void Update()
+    {
+        // Check if the Escape key is pressed
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // Toggle the pause state
+            if (isPaused)
+            {
+                ResumeGame();
+            }
+            else
+            {
+                PauseGame();
+            }
+        }
     }
 
     public void PauseGame()
     {
         pausePanel.SetActive(true);
         gameUI.SetActive(false);
-        Time.timeScale = 0f; // Menghentikan waktu di game
+        Time.timeScale = 0f; // Stops the game time
+        isPaused = true;
     }
 
     public void ResumeGame()
     {
         pausePanel.SetActive(false);
         gameUI.SetActive(true);
-        Time.timeScale = 1f; // Mengembalikan waktu ke normal
+        Time.timeScale = 1f; // Resumes normal game time
+        isPaused = false;
     }
 
-    // Fungsi untuk kembali ke MainMenu
+    // Function to return to the Main Menu
     public void ReturnToMainMenu()
     {
-        Time.timeScale = 1f; // Pastikan waktu kembali normal
-        SceneManager.LoadScene("MainMenu"); // Ganti "MainMenu" dengan nama scene menu utama kamu
+        Time.timeScale = 1f; // Ensure time is back to normal
+        SceneManager.LoadScene("MainMenu"); // Replace "MainMenu" with your main menu scene name
     }
 }

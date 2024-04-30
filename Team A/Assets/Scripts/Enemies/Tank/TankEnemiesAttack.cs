@@ -1,10 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TankEnemiesAttack : MeleeAttack
 {
-    public float stunDuration = 2.0f;
+    public float stunDuration = 2.0f;  // Default stun duration
+    public float nightStunDurationIncrease = 1.0f;  // Additional stun duration during night
+    private float originalStunDuration;  // Store the original stun duration to revert back
+    private TimeManager timeManager;
+    private bool isNightTimeBuffApplied = false;
+
+    void Start()
+    {
+        originalStunDuration = stunDuration;  // Store the original stun duration
+        timeManager = TimeManager.Instance;
+        timeManager.OnTimeChange += HandleTimeChange;
+
+        // Apply stun duration buff if it starts during the night
+        if (timeManager.currentTimeOfDay == TimeManager.TimeOfDay.Night)
+        {
+            ApplyNightTimeBuff();
+        }
+    }
 
     protected override void PerformAttack(GameObject target)
     {
@@ -12,7 +27,7 @@ public class TankEnemiesAttack : MeleeAttack
         if (defenderHealth != null)
         {
             defenderHealth.TakeDamage(damage, DefenderHealth.DamageType.Physical);
-            defenderHealth.ApplyStun(stunDuration);
+            defenderHealth.ApplyStun(stunDuration);  // Use modified stun duration
             lastAttackTime = Time.time;
             return;
         }
@@ -29,6 +44,44 @@ public class TankEnemiesAttack : MeleeAttack
         {
             playerHealth.TakeDamage(damage, PlayerHealth.DamageType.Physical);
             lastAttackTime = Time.time;
+        }
+    }
+
+    private void HandleTimeChange()
+    {
+        if (timeManager.currentTimeOfDay == TimeManager.TimeOfDay.Night)
+        {
+            ApplyNightTimeBuff();
+        }
+        else
+        {
+            RemoveNightTimeBuff();
+        }
+    }
+
+    private void ApplyNightTimeBuff()
+    {
+        if (!isNightTimeBuffApplied)
+        {
+            stunDuration += nightStunDurationIncrease;  // Increase stun duration
+            isNightTimeBuffApplied = true;
+        }
+    }
+
+    private void RemoveNightTimeBuff()
+    {
+        if (isNightTimeBuffApplied)
+        {
+            stunDuration = originalStunDuration;  // Revert to original duration
+            isNightTimeBuffApplied = false;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (timeManager != null)
+        {
+            timeManager.OnTimeChange -= HandleTimeChange;
         }
     }
 }

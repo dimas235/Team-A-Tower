@@ -3,6 +3,20 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
+    // Singleton pattern
+    public static TimeManager Instance { get; private set; }
+
+    // Define an enum to represent time of day
+    public enum TimeOfDay
+    {
+        Day,
+        Night
+    }
+
+    // Public variable to hold current time of day
+    public TimeOfDay currentTimeOfDay = TimeOfDay.Day;
+
+    [SerializeField] private Material skyboxMaterial;
     [SerializeField] private Texture2D skyboxNight;
     [SerializeField] private Texture2D skyboxDay;
     [SerializeField] private Gradient gradientDayToNight;
@@ -10,13 +24,39 @@ public class TimeManager : MonoBehaviour
     [SerializeField] private Light globalLight;
 
     public float changeIntervalInSeconds = 60f;
-
-    private bool isDaytime = true; // Menambahkan variabel untuk menandai siang atau malam
     private float timeSinceLastChange = 0f;
+
+    // Event untuk memberitahu perubahan waktu
+    public event System.Action OnTimeChange;
+
+    private void Awake()
+    {
+        // Singleton setup
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
+        ResetToDaytime();
         StartCoroutine(UpdateGameTime());
+    }
+
+    private void ResetToDaytime()
+    {
+        // Set skybox to daytime texture
+        skyboxMaterial.SetTexture("_MainTex", skyboxDay);
+        skyboxMaterial.SetFloat("_Blend", 0); // Ensure it's full day texture
+        globalLight.color = gradientDayToNight.Evaluate(0); // Set light to day
+        RenderSettings.fogColor = globalLight.color; // Set fog to day
+        currentTimeOfDay = TimeOfDay.Day;
     }
 
     private IEnumerator UpdateGameTime()
@@ -28,16 +68,21 @@ public class TimeManager : MonoBehaviour
 
             if (timeSinceLastChange >= changeIntervalInSeconds)
             {
-                OnTimeChange();
+                HandleTimeChange(); // Panggil metode HandleTimeChange saat waktu berubah
                 timeSinceLastChange = 0f;
-                isDaytime = !isDaytime; // Mengubah status siang/malam setiap kali mengubah waktu
             }
         }
     }
 
-    private void OnTimeChange()
+    private void HandleTimeChange()
     {
-        if (isDaytime)
+        // Toggle between day and night
+        currentTimeOfDay = (currentTimeOfDay == TimeOfDay.Day) ? TimeOfDay.Night : TimeOfDay.Day;
+
+        // Panggil event OnTimeChange untuk memberitahu perubahan waktu
+        OnTimeChange?.Invoke();
+
+        if (currentTimeOfDay == TimeOfDay.Day)
         {
             StartCoroutine(LerpSkybox(skyboxDay, skyboxNight, 5f));
             StartCoroutine(LerpLight(gradientDayToNight, 5f));
@@ -49,24 +94,27 @@ public class TimeManager : MonoBehaviour
         }
     }
 
-    private IEnumerator LerpSkybox(Texture2D a, Texture2D b, float time)
+    private IEnumerator LerpSkybox(Texture2D startTexture, Texture2D endTexture, float duration)
     {
-        RenderSettings.skybox.SetTexture("_Texture1", a);
-        RenderSettings.skybox.SetTexture("_Texture2", b);
-        RenderSettings.skybox.SetFloat("_Blend", 0);
-        for (float i = 0; i < time; i += Time.deltaTime)
+        float time = 0f;
+        while (time < duration)
         {
-            RenderSettings.skybox.SetFloat("_Blend", i / time);
+            time += Time.deltaTime;
+            float blendValue = time / duration;
+            skyboxMaterial.SetFloat("_Blend", blendValue);
             yield return null;
         }
-        RenderSettings.skybox.SetTexture("_Texture1", b);
+        // Ensure complete transition to end texture
+        skyboxMaterial.SetFloat("_Blend", currentTimeOfDay == TimeOfDay.Day ? 0f : 1f);
     }
 
-    private IEnumerator LerpLight(Gradient lightGradient, float time)
+    private IEnumerator LerpLight(Gradient gradient, float duration)
     {
-        for (float i = 0; i < time; i += Time.deltaTime)
+        float time = 0f;
+        while (time < duration)
         {
-            globalLight.color = lightGradient.Evaluate(i / time);
+            time += Time.deltaTime;
+            globalLight.color = gradient.Evaluate(time / duration);
             RenderSettings.fogColor = globalLight.color;
             yield return null;
         }

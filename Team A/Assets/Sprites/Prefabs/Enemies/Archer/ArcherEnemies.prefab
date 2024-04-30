@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 8139322258720993779}
   - component: {fileID: 9082168442773224669}
   - component: {fileID: 4488942444806660334}
+  - component: {fileID: 6292943160899259548}
   m_Layer: 12
   m_Name: ArcherEnemies
   m_TagString: Untagged
@@ -203,6 +204,19 @@ MonoBehaviour:
     m_Bits: 8576
   enemyMovement: {fileID: 9082168442773224669}
   bowScript: {fileID: 8139322258720993779}
+--- !u!114 &6292943160899259548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3810191952997043970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34eb97d151da0264894dc3cb6f59af79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBuffAmount: 50
 --- !u!1 &7388549425292338914
 GameObject:
   m_ObjectHideFlags: 0

@@ -149,8 +149,5 @@ MonoBehaviour:
   arrowRb: {fileID: 1132389207658853329}
   speed: 5
   range: 3
-  damage: 10
-  ArrowDefenderLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  nonCollisionRadius: 10
+  damage: 2
+  nightDamageMultiplier: 3
