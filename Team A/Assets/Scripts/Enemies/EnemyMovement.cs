@@ -6,12 +6,23 @@ public class EnemyMovement : MonoBehaviour
 {
     public Rigidbody enemyRb;
     public float speed;
+    private bool canMove = true;
 
+    // Memperbarui apakah enemy bisa bergerak atau tidak
+    public void SetMovement(bool status)
+    {
+        canMove = status;
+        if (!canMove)
+        {
+            enemyRb.velocity = Vector2.zero;  // Menghentikan musuh
+        }
+    }
 
-
-    // Update is called once per frame
     void FixedUpdate()
     {
-       enemyRb.velocity = Vector2.left * speed;
+        if (canMove)
+        {
+            enemyRb.velocity = Vector2.left * speed;
+        }
     }
 }

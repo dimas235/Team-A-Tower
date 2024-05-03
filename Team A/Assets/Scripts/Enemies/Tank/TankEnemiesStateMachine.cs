@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class TankEnemiesStateMachine : MonoBehaviour
 {
-   public enum State
-   {
-       Walking,
-       Attacking
-   };
+    public enum State
+    {
+        Walking,
+        Attacking
+    };
 
     public State currentState;
     public float detectionRange;
@@ -23,6 +23,7 @@ public class TankEnemiesStateMachine : MonoBehaviour
         {
             tankEnemiesAttack.enabled = false;
         }
+        enemyMovement.SetMovement(true);  // Enable movement initially
     }
 
     void Update()
@@ -37,15 +38,29 @@ public class TankEnemiesStateMachine : MonoBehaviour
 
         if (currentState == State.Walking && defenderDetected)
         {
-            currentState = State.Attacking;
-            tankEnemiesAttack.enabled = true;
-            enemyMovement.enabled = false;
+            ChangeState(State.Attacking);
         }
         else if (!defenderDetected && currentState == State.Attacking)
         {
-            currentState = State.Walking;
-            tankEnemiesAttack.enabled = false;
-            enemyMovement.enabled = true;
+            ChangeState(State.Walking);
+        }
+    }
+
+    void ChangeState(State newState)
+    {
+        if (currentState == newState) return;
+
+        currentState = newState;
+        switch (currentState)
+        {
+            case State.Walking:
+                tankEnemiesAttack.enabled = false;
+                enemyMovement.SetMovement(true);
+                break;
+            case State.Attacking:
+                tankEnemiesAttack.enabled = true;
+                enemyMovement.SetMovement(false);
+                break;
         }
     }
 }

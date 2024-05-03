@@ -19,7 +19,7 @@ public class EnemyStateMachineArcher : MonoBehaviour
     void Start()
     {
         enemiesState = EnemiesState.Walking;
-        enemyHealth = GetComponent<EnemyHealth>();  // Inisialisasi EnemyHealth
+        enemyHealth = GetComponent<EnemyHealth>();
         if (bowScript != null)
         {
             bowScript.enabled = false;
@@ -30,13 +30,20 @@ public class EnemyStateMachineArcher : MonoBehaviour
     {
         if (enemyHealth.isStunned)
         {
-            bowScript.enabled = false;  // Nonaktifkan bowScript jika musuh ter-stun
-            enemyMovement.enabled = false;  // Nonaktifkan pergerakan jika musuh ter-stun
-            return;  // Keluar dari update jika musuh ter-stun
+            bowScript.enabled = false;
+            enemyMovement.SetMovement(false);
+            return;
         }
 
+        Vector3 raycastDirection = transform.TransformDirection(Vector2.left);
         RaycastHit hit;
-        bool defenderDetected = Physics.Raycast(transform.position, Vector2.left, out hit, detectionRange, defenderLayer);
+        bool defenderDetected = Physics.Raycast(transform.position, raycastDirection, out hit, detectionRange, defenderLayer);
+        Debug.DrawRay(transform.position, raycastDirection * detectionRange, Color.red);
+
+        if (hit.collider != null) // Cek jika ada yang terkena raycast
+        {
+            Debug.Log("Hit: " + hit.collider.gameObject.name);
+        }
 
         if (enemiesState == EnemiesState.Walking && defenderDetected)
         {
@@ -52,9 +59,6 @@ public class EnemyStateMachineArcher : MonoBehaviour
     {
         enemiesState = newState;
         bowScript.enabled = (newState == EnemiesState.Shooting);
-        if (enemyMovement != null)
-        {
-            enemyMovement.enabled = (newState == EnemiesState.Walking);
-        }
+        enemyMovement.SetMovement(newState == EnemiesState.Walking);
     }
 }

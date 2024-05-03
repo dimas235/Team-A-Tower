@@ -3,32 +3,44 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
-    public bool isMoving;
-    
-    private Rigidbody rb;
+    private CharacterController controller;
     private float movementInput;
-    public bool facingRight = true; // Dijadikan public untuk diakses oleh PlayerThrowing
+    public bool facingRight = true; 
+    private Animator animator; 
+    private bool isAttacking = false; // Menandai apakah karakter sedang menyerang
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        controller = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>(); 
     }
 
     void Update()
     {
-        isMoving = false;
+        // Jika karakter sedang menyerang, keluar dari metode Update
+        if (isAttacking)
+        {
+            return;
+        }
 
         movementInput = 0f;
         if (Input.GetKey(KeyCode.D))
         {
             movementInput = 1f;
-            isMoving = true;
+            animator.SetBool("IsRunning", true); 
         }
         else if (Input.GetKey(KeyCode.A))
         {
             movementInput = -1f;
-            isMoving = true;
+            animator.SetBool("IsRunning", true); 
         }
+        else
+        {
+            animator.SetBool("IsRunning", false);
+        }
+
+        Vector3 move = new Vector3(movementInput * moveSpeed * Time.deltaTime, 0f, 0f);
+        controller.Move(move);
 
         if (movementInput > 0 && !facingRight)
         {
@@ -40,16 +52,17 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
-        rb.MovePosition(rb.position + new Vector3(movementInput, 0f, 0f) * moveSpeed * Time.fixedDeltaTime);
-    }
-
-    public void Flip()
+    void Flip()
     {
         facingRight = !facingRight;
         Vector3 theScale = transform.localScale;
-        theScale.x *= -1;
+        theScale.z *= -1;
         transform.localScale = theScale;
+    }
+
+    // Metode untuk mengatur status serangan
+    public void SetIsAttacking(bool attacking)
+    {
+        isAttacking = attacking;
     }
 }

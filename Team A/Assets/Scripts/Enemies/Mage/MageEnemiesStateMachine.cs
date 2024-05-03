@@ -27,10 +27,11 @@ public class MageEnemiesStateMachine : MonoBehaviour
         if (enemyHealth.isStunned)
         {
             mageEnemiesThrowingScript.enabled = false;  // Nonaktifkan mageEnemiesThrowingScript jika musuh ter-stun
-            enemyMovement.enabled = false;  // Nonaktifkan pergerakan jika musuh ter-stun
+            enemyMovement.SetMovement(false);  // Nonaktifkan enemyMovement jika musuh ter-stun
             return;  // Keluar dari update jika musuh ter-stun
         }
 
+        Vector3 raycastDirection = transform.TransformDirection(Vector2.left);
         RaycastHit hit;
         bool defenderDetected = Physics.Raycast(transform.position, Vector2.left, out hit, detectionRange, defenderLayer);
 
@@ -46,12 +47,9 @@ public class MageEnemiesStateMachine : MonoBehaviour
 
     void ChangeState(EnemiesState newState)
     {
-        enemiesState = newState;
-        mageEnemiesThrowingScript.enabled = (newState == EnemiesState.Shooting);
-        if (enemyMovement != null)
-        {
-            enemyMovement.enabled = (newState == EnemiesState.Walking);
-        }
+       enemiesState = newState;
+       mageEnemiesThrowingScript.enabled = newState == EnemiesState.Shooting;
+        enemyMovement.SetMovement(newState == EnemiesState.Walking);
     }
 
     public enum EnemiesState

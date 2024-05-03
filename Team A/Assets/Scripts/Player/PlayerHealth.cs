@@ -11,15 +11,18 @@ public class PlayerHealth : MonoBehaviour
     public TextMeshProUGUI healthText;
     public GameObject popUpDamagePrefabPhysical;
     public GameObject popUpDamagePrefabMage;
+    public Animator animator;              // Referensi Animator
+    public CharacterController controller; // Referensi CharacterController
 
     public bool isStunned = false;
     public float stunDuration = 0;
     public event System.Action OnStunEnded;
 
-    public float regenRate = 1;          // Kesehatan yang diregen per detik.
-    public float regenDelay = 5;         // Waktu delay dalam detik sebelum regenerasi dimulai.
-    private Coroutine regenCoroutine;    // Coroutine untuk regenerasi kesehatan.
-    private float lastDamageTime;        // Waktu terakhir pemain terkena serangan.
+    public float regenRate = 1;             // Kesehatan yang diregen per detik.
+    public float regenDelay = 5;            // Waktu delay dalam detik sebelum regenerasi dimulai.
+    private Coroutine regenCoroutine;       // Coroutine untuk regenerasi kesehatan.
+    private float lastDamageTime;           // Waktu terakhir pemain terkena serangan.
+    private bool isDead = false;            // Tandai apakah pemain sudah mati.
 
     public enum DamageType
     {
@@ -37,8 +40,19 @@ public class PlayerHealth : MonoBehaviour
         lastDamageTime = Time.time;
     }
 
+    void Update()
+    {
+        if (isDead)
+        {
+            // Pastikan bahwa setelah mati, pemain tidak lagi menerima input dan gravitasi berlaku.
+            controller.Move(Vector3.down * 9.81f * Time.deltaTime); // Aplikasikan gravitasi manual jika perlu
+        }
+    }
+
     public void TakeDamage(int damage, DamageType type)
     {
+        if (health <= 0 || isDead) return; // Tidak menerima kerusakan jika sudah mati.
+
         health -= damage;
         health = Mathf.Clamp(health, 0, maxHealth);
         slider.value = health;
@@ -70,11 +84,21 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    private void Die()
+    {
+        if (!isDead)
+        {
+            animator.SetTrigger("IsDeath");
+            isDead = true;
+            controller.enabled = false; // Nonaktifkan CharacterController setelah mati.
+            this.enabled = false;       // Nonaktifkan skrip ini jika tidak ingin ada logika lebih lanjut yang berjalan.
+        }
+    }
+
     private IEnumerator DelayRegenHealth()
     {
         yield return new WaitForSeconds(regenDelay);
-
-        while (health < maxHealth && (Time.time - lastDamageTime >= regenDelay))
+        while (health < maxHealth && (Time.time - lastDamageTime >= regenDelay) && !isDead)
         {
             health += Mathf.FloorToInt(regenRate);
             health = Mathf.Clamp(health, 0, maxHealth);
@@ -86,7 +110,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void ApplyStun(float duration)
     {
-        if (duration > 0 && !isStunned)
+        if (duration > 0 && !isStunned && !isDead)
         {
             isStunned = true;
             stunDuration = duration;
@@ -103,11 +127,6 @@ public class PlayerHealth : MonoBehaviour
         yield return new WaitForSeconds(duration);
         isStunned = false;
         OnStunEnded?.Invoke();
-    }
-
-    private void Die()
-    {
-        
     }
 
     private void UpdateHealthText()
