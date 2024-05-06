@@ -13,9 +13,15 @@ public class DefenderMovement : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-         defenderRb.velocity = Vector2.right * speed;
+        if (enabled)
+        {
+            defenderRb.velocity = Vector2.right * speed;
+        }
+        else
+        {
+            defenderRb.velocity = Vector2.zero; // Menghentikan Rigidbody ketika DefenderMovement dinonaktifkan
+        }
     }
 }
