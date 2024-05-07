@@ -14,6 +14,26 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Gold
     second: {fileID: 2100000, guid: 3ae7409a0b210d840a54fc739a771f0e, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: marble_35_basecolor-4K
+    second: {fileID: 2800000, guid: 028fe1bbab985f24e992e643970d6c44, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: marble_35_metallic-4K
+    second: {fileID: 2800000, guid: bb7cecdbd1711e747824beb7bbebf3c9, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: marble_35_normal-4K
+    second: {fileID: 2800000, guid: 045bb63db1aa0054d9d5e31fcb31b3e0, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: marble_35_roughness-4K
+    second: {fileID: 2800000, guid: c7ba81d66d3318a499f0b7e1451c8411, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
