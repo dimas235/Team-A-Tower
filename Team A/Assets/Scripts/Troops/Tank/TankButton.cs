@@ -20,7 +20,8 @@ public class TankButton : DefenderButton
 
     protected override void SpawnDefender()
     {
-        var data = Instantiate(tankPrefab, transform.position, Quaternion.identity);
+        var data = Instantiate(tankPrefab, transform.position, tankPrefab.transform.rotation);
         GameManager.instance.defenders.Add(data);
     }
 }
+

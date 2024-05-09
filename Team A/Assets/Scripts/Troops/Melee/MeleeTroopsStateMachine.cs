@@ -11,17 +11,18 @@ public class MeleeTroopsStateMachine : MonoBehaviour
 
     public State currentState;
     public float detectionRange;
-    public LayerMask enemyLayer; // Layer untuk musuh
-    // public LayerMask defenderLayer; // Layer untuk defender, digunakan untuk mengabaikan tabrakan
-    // public float nonCollisionRadius = 1f; // Jarak untuk mengabaikan tabrakan antar musuh
+    public LayerMask enemyLayer;
     public DefenderMovement troopMovement;
-    public TroopAttack troopAttack; // Class yang mirip dengan EnemyAttack tetapi untuk Troops
-    private DefenderHealth troopHealth; // Menambahkan referensi ke TroopHealth
+    public TroopAttack troopAttack;
+    public Animator animator;
+    
+
     void Start()
     {
+        animator = GetComponent<Animator>();
         currentState = State.Walking;
-        troopHealth = GetComponent<DefenderHealth>(); // Menginisialisasi troopHealth
-        troopHealth.OnStunEnded += ReactiveAfterStun;
+        animator.SetBool("IsRunning", true);
+        animator.SetBool("IsAttack", false);
         if (troopAttack != null)
         {
             troopAttack.enabled = false;
@@ -30,67 +31,56 @@ public class MeleeTroopsStateMachine : MonoBehaviour
 
     void Update()
     {
-        if (troopHealth.isStunned)
-        {
-            // Jika troop ter-stun, nonaktifkan serangan dan gerakan, serta tetap dalam status ini
-            troopAttack.enabled = false;
-            troopMovement.enabled = false;
-            return;
-        }
-        else
-        {
-            CheckStateConditions();
-        }
+        CheckStateConditions();
     }
 
     void CheckStateConditions()
     {
         RaycastHit hit;
-        bool enemyDetected = Physics.Raycast(transform.position, Vector2.right, out hit, detectionRange, enemyLayer);
+        Vector3 forward = transform.TransformDirection(Vector3.forward) * detectionRange;
+        bool enemyDetected = Physics.Raycast(transform.position, forward, out hit, detectionRange, enemyLayer);
 
-        if (currentState == State.Walking && enemyDetected)
+        if (enemyDetected)
         {
-            currentState = State.Attacking;
-            troopAttack.enabled = true;
-            troopMovement.enabled = false;
-            ChangeState(State.Attacking);
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("TowerEnemy") || hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                if (currentState != State.Attacking || animator.GetBool("IsCooldown"))
+                {
+                    TransitionToAttack();
+                }
+            }
         }
-        else if (!enemyDetected && currentState == State.Attacking)
+        else
         {
-            currentState = State.Walking;
-            troopAttack.enabled = false;
-            troopMovement.enabled = true;
-            ChangeState(State.Walking);
+            TransitionToWalking();
+        }
+        if (currentState == State.Attacking && troopAttack.IsAttackOnCooldown())
+        {
+            animator.SetBool("IsCooldown", true);
+        }
+        else
+        {
+            animator.SetBool("IsCooldown", false);
         }
     }
 
-    private void ReactiveAfterStun()
+    private void TransitionToAttack()
     {
+        animator.SetBool("IsRunning", false);
+        animator.SetBool("IsAttack", true);
+        animator.SetBool("IsCooldown", troopAttack.IsAttackOnCooldown());
+        currentState = State.Attacking;
         troopAttack.enabled = true;
+        troopMovement.enabled = false;
     }
 
-    void ChangeState(State newState)
+    private void TransitionToWalking()
     {
-        currentState = newState;
-        troopAttack.enabled = (newState == State.Attacking);
-        if (troopMovement != null)
-        {
-            troopMovement.enabled = (newState == State.Walking);
-        }
+        animator.SetBool("IsRunning", true);
+        animator.SetBool("IsAttack", false);
+        animator.SetBool("IsCooldown", false);
+        currentState = State.Walking;
+        troopAttack.enabled = false;
+        troopMovement.enabled = true;
     }
-
-
-
-    // void IgnoreCollisionsWithDefender()
-    // {
-    //     // Mendeteksi musuh lain dalam radius tertentu
-    //     Collider[] enemies = Physics.OverlapSphere(transform.position, nonCollisionRadius, defenderLayer);
-    //     foreach (var otherEnemy in enemies)
-    //     {
-    //         if (otherEnemy.gameObject != gameObject) // Pastikan tidak memilih collider sendiri
-    //         {
-    //             Physics.IgnoreCollision(GetComponent<Collider>(), otherEnemy, true);
-    //         }
-    //     }
-    // }
 }

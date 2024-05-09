@@ -8,21 +8,32 @@ public class EnemyMovement : MonoBehaviour
     public float speed;
     private bool canMove = true;
 
-    // Memperbarui apakah enemy bisa bergerak atau tidak
+    private EnemyHealth enemyHealth;  // Referensi ke skrip EnemyHealth
+
+    void Start()
+    {
+        enemyHealth = GetComponent<EnemyHealth>();
+    }
+
+
+    void FixedUpdate()
+    {
+            if (canMove && enemyHealth.isAlive)  // Cek apakah karakter masih hidup
+        {
+            enemyRb.velocity = Vector2.left * speed;
+        }
+        else
+        {
+            enemyRb.velocity = Vector2.zero;  // Hentikan pergerakan jika mati
+        }
+    }
+
     public void SetMovement(bool status)
     {
         canMove = status;
         if (!canMove)
         {
-            enemyRb.velocity = Vector2.zero;  // Menghentikan musuh
-        }
-    }
-
-    void FixedUpdate()
-    {
-        if (canMove)
-        {
-            enemyRb.velocity = Vector2.left * speed;
+            enemyRb.velocity = Vector2.zero;
         }
     }
 }

@@ -21,5 +21,12 @@ public abstract class MeleeAttack : MonoBehaviour
         }
     }
 
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+    }
+
+
     protected abstract void PerformAttack(GameObject target);
 }

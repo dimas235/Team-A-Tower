@@ -13,6 +13,9 @@ public class TowerHealthAttacker : MonoBehaviour
     public GameObject popUpDamagePrefabPhysical;
     public GameObject popUpDamagePrefabMage;
 
+    // Add isAlive property
+    public bool isAlive = true;
+
     public enum DamageType
     {
         Physical,
@@ -30,12 +33,13 @@ public class TowerHealthAttacker : MonoBehaviour
 
     public void TakeDamage(int damage, DamageType type)
     {
+        if (!isAlive) return;
+
         health -= damage;
         health = Mathf.Clamp(health, 0, maxHealth);
         slider.value = health;
         UpdateHealthText();
 
-        // Instantiate the correct damage popup prefab based on the damage type
         GameObject selectedPrefab = type == DamageType.Mage ? popUpDamagePrefabMage : popUpDamagePrefabPhysical;
         if (selectedPrefab != null)
         {
@@ -49,12 +53,18 @@ public class TowerHealthAttacker : MonoBehaviour
 
         if (health <= 0)
         {
-            gameObject.SetActive(false);
-            onTowerDestroyed.Invoke();
-            if (slider.gameObject != null)
-            {
-                Destroy(slider.gameObject);
-            }
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        gameObject.SetActive(false);
+        isAlive = false;  // Set isAlive to false upon destruction
+        onTowerDestroyed.Invoke();
+        if (slider.gameObject != null)
+        {
+            Destroy(slider.gameObject);
         }
     }
 

@@ -8,6 +8,11 @@ public class TankEnemiesAttack : MeleeAttack
     private TimeManager timeManager;
     private bool isNightTimeBuffApplied = false;
 
+    public bool IsAttackOnCooldown()
+    {
+        return Time.time - lastAttackTime < attackCooldown;
+    }
+
     void Start()
     {
         originalStunDuration = stunDuration;  // Store the original stun duration
@@ -23,6 +28,9 @@ public class TankEnemiesAttack : MeleeAttack
 
     protected override void PerformAttack(GameObject target)
     {
+        if (!enabled || GetComponent<EnemyHealth>().isAlive == false)
+        return;
+    
         DefenderHealth defenderHealth = target.GetComponent<DefenderHealth>();
         if (defenderHealth != null)
         {

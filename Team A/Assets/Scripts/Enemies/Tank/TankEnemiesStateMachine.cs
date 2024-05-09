@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TankEnemiesStateMachine : MonoBehaviour
@@ -7,23 +5,27 @@ public class TankEnemiesStateMachine : MonoBehaviour
     public enum State
     {
         Walking,
-        Attacking
+        Attacking,
+        Idle
     };
 
     public State currentState;
+    public Animator animator;
     public float detectionRange;
-    public LayerMask defenderLayer;
+    public LayerMask enemyLayer;
     public EnemyMovement enemyMovement;
     public TankEnemiesAttack tankEnemiesAttack;
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         currentState = State.Walking;
+        animator.SetBool("IsRunning", true);
+        animator.SetBool("IsAttack", false);
         if (tankEnemiesAttack != null)
         {
             tankEnemiesAttack.enabled = false;
         }
-        enemyMovement.SetMovement(true);  // Enable movement initially
     }
 
     void Update()
@@ -34,33 +36,67 @@ public class TankEnemiesStateMachine : MonoBehaviour
     void CheckStateConditions()
     {
         RaycastHit hit;
-        bool defenderDetected = Physics.Raycast(transform.position, Vector2.left, out hit, detectionRange, defenderLayer);
+        Vector3 forward = transform.TransformDirection(Vector3.forward) * detectionRange;
+        bool enemyDetected = Physics.Raycast(transform.position, forward, out hit, detectionRange, enemyLayer);
+        Debug.DrawRay(transform.position, forward, Color.red, 1.0f);
 
-        if (currentState == State.Walking && defenderDetected)
+        if (enemyDetected)
         {
-            ChangeState(State.Attacking);
+            Debug.Log($"Detected: {hit.collider.gameObject.name}, Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
+            // Menambahkan pemeriksaan untuk tiga layer yang berbeda
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("TowerDefense") ||
+                hit.collider.gameObject.layer == LayerMask.NameToLayer("Troops") ||
+                hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                if (currentState != State.Attacking || animator.GetBool("IsCooldown"))
+                {
+                    TransitionToAttack();
+                }
+            }
         }
-        else if (!defenderDetected && currentState == State.Attacking)
+        else
         {
-            ChangeState(State.Walking);
+            TransitionToWalking();
+        }
+
+        if (currentState == State.Attacking && tankEnemiesAttack.IsAttackOnCooldown())
+        {
+            animator.SetBool("IsCooldown", true);
+        }
+        else
+        {
+            animator.SetBool("IsCooldown", false);
         }
     }
 
-    void ChangeState(State newState)
-    {
-        if (currentState == newState) return;
 
-        currentState = newState;
-        switch (currentState)
-        {
-            case State.Walking:
-                tankEnemiesAttack.enabled = false;
-                enemyMovement.SetMovement(true);
-                break;
-            case State.Attacking:
-                tankEnemiesAttack.enabled = true;
-                enemyMovement.SetMovement(false);
-                break;
-        }
+    private void TransitionToAttack()
+    {
+        animator.SetBool("IsRunning", false);
+        animator.SetBool("IsAttack", true);
+        animator.SetBool("IsCooldown", tankEnemiesAttack.IsAttackOnCooldown());
+        currentState = State.Attacking;
+        tankEnemiesAttack.enabled = true;
+        enemyMovement.enabled = false;
+    }
+
+    private void TransitionToIdle()
+    {
+        animator.SetBool("IsRunning", false);
+        animator.SetBool("IsAttack", false);
+        animator.SetBool("IsCooldown", false);
+        currentState = State.Idle;
+        tankEnemiesAttack.enabled = false;
+        enemyMovement.enabled = false;
+    }
+
+    private void TransitionToWalking()
+    {
+        animator.SetBool("IsRunning", true);
+        animator.SetBool("IsAttack", false);
+        animator.SetBool("IsCooldown", false);
+        currentState = State.Walking;
+        tankEnemiesAttack.enabled = false;
+        enemyMovement.enabled = true;
     }
 }

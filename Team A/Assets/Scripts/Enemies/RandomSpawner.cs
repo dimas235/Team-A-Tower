@@ -73,16 +73,15 @@ public class RandomSpawner : MonoBehaviour
 
     void SpawnSingleEnemy()
     {
-        Instantiate(singleEnemyPrefab, spawnPoint.position, spawnPoint.rotation);
+        Instantiate(singleEnemyPrefab, spawnPoint.position, singleEnemyPrefab.transform.rotation);
     }
-
     void SpawnWaveEnemy()
     {
         if (enemyShuffleBag.Count > 0)
         {
             GameObject enemyPrefab = enemyShuffleBag[0];
             enemyShuffleBag.RemoveAt(0);
-            Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+            Instantiate(enemyPrefab, spawnPoint.position, enemyPrefab.transform.rotation);
         }
     }
 

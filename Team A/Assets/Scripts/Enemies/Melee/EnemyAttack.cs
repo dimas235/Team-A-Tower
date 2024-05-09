@@ -7,6 +7,11 @@ public class EnemyAttack : MeleeAttack
     private int originalDamage; // Store the original damage to revert back
     private bool isNightTimeDamageBuffApplied = false;
 
+    public bool IsAttackOnCooldown()
+    {
+        return Time.time - lastAttackTime < attackCooldown;
+    }
+
     void Start()
     {
         timeManager = TimeManager.Instance;
@@ -22,6 +27,9 @@ public class EnemyAttack : MeleeAttack
 
     protected override void PerformAttack(GameObject target)
     {
+        if (!enabled || GetComponent<EnemyHealth>().isAlive == false)
+        return;
+    
         TowerHealthDefens towerHealthDefens = target.GetComponent<TowerHealthDefens>();
         if (towerHealthDefens != null)
         {

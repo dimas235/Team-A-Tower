@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TankTroopsStateMachine : MonoBehaviour
@@ -7,22 +5,23 @@ public class TankTroopsStateMachine : MonoBehaviour
     public enum State
     {
         Walking,
-        Attacking
+        Attacking,
+        // Idle
     };
 
     public State currentState;
     public Animator animator;
     public float detectionRange;
-    public LayerMask enemyLayer; // Layer untuk musuh
+    public LayerMask enemyLayer;
     public DefenderMovement troopMovement;
-    public TankTroopsAttack troopAttack; // Class yang mirip dengan EnemyAttack tetapi untuk Troops
+    public TankTroopsAttack troopAttack;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         currentState = State.Walking;
         animator.SetBool("IsRunning", true);
-        animator.SetBool("IsAttacking", false);
+        animator.SetBool("IsAttack", false);
         if (troopAttack != null)
         {
             troopAttack.enabled = false;
@@ -37,23 +36,63 @@ public class TankTroopsStateMachine : MonoBehaviour
     void CheckStateConditions()
     {
         RaycastHit hit;
-        bool enemyDetected = Physics.Raycast(transform.position, Vector2.right, out hit, detectionRange, enemyLayer);
+        Vector3 forward = transform.TransformDirection(Vector3.forward) * detectionRange;
+        bool enemyDetected = Physics.Raycast(transform.position, forward, out hit, detectionRange, enemyLayer);
+        Debug.DrawRay(transform.position, forward, Color.red, 1.0f);
 
-        if (currentState == State.Walking && enemyDetected)
+        if (enemyDetected)
         {
-            animator.SetBool("IsRunning", false);
-            animator.SetBool("IsAttacking", true);
-            currentState = State.Attacking;
-            troopAttack.enabled = true;
-            troopMovement.enabled = false;
+            Debug.Log($"Detected: {hit.collider.gameObject.name}, Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("TowerEnemy") || hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                if (currentState != State.Attacking || animator.GetBool("IsCooldown"))
+                {
+                    TransitionToAttack();
+                }
+            }
         }
-        else if (!enemyDetected && currentState == State.Attacking)
+        else
         {
-            animator.SetBool("IsRunning", true);
-            animator.SetBool("IsAttacking", false);
-            currentState = State.Walking;
-            troopAttack.enabled = false;
-            troopMovement.enabled = true;
+            TransitionToWalking();
         }
+
+        if (currentState == State.Attacking && troopAttack.IsAttackOnCooldown())
+        {
+            animator.SetBool("IsCooldown", true);
+        }
+        else
+        {
+            animator.SetBool("IsCooldown", false);
+        }
+    }
+
+    private void TransitionToAttack()
+    {
+        animator.SetBool("IsRunning", false);
+        animator.SetBool("IsAttack", true);
+        animator.SetBool("IsCooldown", troopAttack.IsAttackOnCooldown());
+        currentState = State.Attacking;
+        troopAttack.enabled = true;
+        troopMovement.enabled = false;
+    }
+
+    // private void TransitionToIdle()
+    // {
+    //     animator.SetBool("IsRunning", false);
+    //     animator.SetBool("IsAttack", false);
+    //     animator.SetBool("IsCooldown", true);
+    //     currentState = State.Idle;
+    //     troopAttack.enabled = false;
+    //     troopMovement.enabled = false;
+    // }
+
+    private void TransitionToWalking()
+    {
+        animator.SetBool("IsRunning", true);
+        animator.SetBool("IsAttack", false);
+        animator.SetBool("IsCooldown", false);
+        currentState = State.Walking;
+        troopAttack.enabled = false;
+        troopMovement.enabled = true;
     }
 }
