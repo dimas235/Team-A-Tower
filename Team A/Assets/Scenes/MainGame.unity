@@ -7543,7 +7543,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 918f1c6c03c63ca4988e810a947787a3, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1284954535183814562, guid: 918f1c6c03c63ca4988e810a947787a3, type: 3}
       propertyPath: m_Layer
@@ -8285,7 +8285,7 @@ MonoBehaviour:
   enemyMovement: {fileID: 1804778986}
   enemyAttack: {fileID: 1804778979}
   animator: {fileID: 1804778984}
-  enemyHealth: {fileID: 0}
+  enemyHealth: {fileID: 1804778989}
 --- !u!136 &1804778983
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -9685,7 +9685,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3d787fd86fdbbaa4caf94bb5cfe9e46a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.99
+      value: 6.83
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3d787fd86fdbbaa4caf94bb5cfe9e46a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10656,11 +10656,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 506972794245436014, guid: c848bd08134deee428df2491e3990743, type: 3}
       propertyPath: health
-      value: 100
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 506972794245436014, guid: c848bd08134deee428df2491e3990743, type: 3}
       propertyPath: maxHealth
-      value: 100
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 506972794245436014, guid: c848bd08134deee428df2491e3990743, type: 3}
       propertyPath: tankTroopsAttack
@@ -10708,7 +10708,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1208792863123125808, guid: c848bd08134deee428df2491e3990743, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1224844020332319380, guid: c848bd08134deee428df2491e3990743, type: 3}
       propertyPath: m_Layer
@@ -10973,6 +10973,10 @@ PrefabInstance:
     - target: {fileID: 8458127694730619428, guid: c848bd08134deee428df2491e3990743, type: 3}
       propertyPath: attackRange
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8458127694730619428, guid: c848bd08134deee428df2491e3990743, type: 3}
+      propertyPath: stunDuration
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8458127694730619428, guid: c848bd08134deee428df2491e3990743, type: 3}
       propertyPath: attackCooldown

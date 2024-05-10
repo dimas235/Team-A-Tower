@@ -19,7 +19,6 @@ public class TankTroopsAttack : MeleeAttack
         if (enemyHealth != null)
         {
             enemyHealth.TakeDamage(damage, EnemyHealth.DamageType.Physical);
-            enemyHealth.ApplyStun(stunDuration);
             lastAttackTime = Time.time;
             return;
         }

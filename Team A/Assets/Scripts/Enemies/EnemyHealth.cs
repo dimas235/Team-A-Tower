@@ -54,31 +54,6 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    public void ApplyStun(float duration)
-    {
-        if (!isAlive)  // Hanya memproses stun jika masih hidup
-            return;
-
-        if (duration > 0 && !isStunned)
-        {
-            isStunned = true;
-            stunDuration = duration;
-            StartCoroutine(StunCountdown(duration));
-        }
-        else if (duration == 0)
-        {
-            isStunned = false;
-        }
-    }
-
-    private IEnumerator StunCountdown(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        isStunned = false;
-        OnStunEnded?.Invoke();
-        StunStatusChanged?.Invoke(isStunned);
-    }
-
     private void Die()
     {
         animator.SetTrigger("Death");  // Aktivasi animasi kematian
