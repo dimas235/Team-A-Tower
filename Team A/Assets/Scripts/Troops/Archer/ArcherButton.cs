@@ -19,7 +19,7 @@ public class ArcherButton : DefenderButton
     // Override metode SpawnDefender yang ditentukan di DefenderButton
     protected override void SpawnDefender()
     {
-        var data = Instantiate(archerPrefab, spawnPoint.position, Quaternion.identity);
+        var data = Instantiate(archerPrefab, spawnPoint.position, archerPrefab.transform.rotation);
         GameManager.instance.defenders.Add(data);
     }
 }

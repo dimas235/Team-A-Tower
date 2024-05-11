@@ -14,7 +14,6 @@ public class MeleeEnemiesStateMachine : MonoBehaviour
     public EnemyMovement enemyMovement;
     public EnemyAttack enemyAttack;
     public Animator animator;
-    public EnemyHealth enemyHealth;
 
     void Start()
     {

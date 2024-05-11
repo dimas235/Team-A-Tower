@@ -17,7 +17,7 @@ public class MageButton : DefenderButton
 
     protected override void SpawnDefender()
     {
-       var data = Instantiate(magePrefab, spawnPoint.position, Quaternion.identity);
+       var data = Instantiate(magePrefab, spawnPoint.position, magePrefab.transform.rotation);
         GameManager.instance.defenders.Add(data);
     }
 

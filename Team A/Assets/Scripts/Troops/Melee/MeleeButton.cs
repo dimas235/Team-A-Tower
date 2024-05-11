@@ -17,7 +17,7 @@ public class MeleeDefenderButton : DefenderButton
 
     protected override void SpawnDefender()
     {
-        var data = Instantiate(meleeDefenderPrefab, spawnPoint.position, Quaternion.identity);
+        var data = Instantiate(meleeDefenderPrefab, spawnPoint.position, meleeDefenderPrefab.transform.rotation);
         GameManager.instance.defenders.Add(data);
     }
 }

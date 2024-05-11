@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class PlayerThrowing : MonoBehaviour
 {
+    private bool projectileSpawned;
     public GameObject magePrefab;
-    public Transform staffTransform;
     public float attackCooldown;
     public Vector3 projectileOffset = new Vector3(0f, 0.5f, 1.0f);  // Default offset: ke depan 1 unit, ke atas 0.5 unit
 
@@ -15,25 +15,36 @@ public class PlayerThrowing : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        lastAttackTime = attackCooldown;
         playerMovement = GetComponent<PlayerMovement>(); // Inisialisasi playerMovement
     }
 
     void Update()
     {
         lastAttackTime -= Time.deltaTime;
-        if (Input.GetKeyDown(KeyCode.Space) && lastAttackTime <= 0 && !animator.GetBool("IsAttacking"))
+        if (Input.GetKeyDown(KeyCode.Space) && lastAttackTime <= 0 && !animator.GetBool("IsAttack"))
         {
-            animator.SetBool("IsAttack", true); // Memulai animasi serangan
+            animator.SetBool("IsAttack", true);
             lastAttackTime = attackCooldown;
-            playerMovement.SetIsAttacking(true); // Set isAttacking menjadi true
+            playerMovement.SetIsAttacking(true);
+            projectileSpawned = false; // Reset the projectile spawn flag
         }
 
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") &&
-            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.5f)
+        // Make sure to reset IsAttack to allow for re-entry into the Attack state
+        if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && animator.GetBool("IsAttack"))
         {
-            animator.SetBool("IsAttack", false); // Menghentikan animasi serangan
-            playerMovement.SetIsAttacking(false); // Set isAttacking menjadi false
+            animator.SetBool("IsAttack", false);
+            playerMovement.SetIsAttacking(false);
+            projectileSpawned = false; // Reset the projectile spawn flag
+        }
+    }
+
+    public void SpawnProjectileIfNeeded()
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") &&
+            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.5f && !projectileSpawned)
+        {
+            ShootInDirection();
+            projectileSpawned = true; // Set the flag to true after spawning the projectile
         }
     }
 
@@ -41,8 +52,7 @@ public class PlayerThrowing : MonoBehaviour
     {
         if (magePrefab == null)
         {
-            Debug.LogError("Mage prefab has not been assigned in the Inspector");
-            return;
+            return;  // Jika magePrefab belum diatur, tidak melakukan apa-apa
         }
 
         Vector3 direction = playerMovement.facingRight ? Vector3.right : Vector3.left; // Menyesuaikan arah berdasarkan orientasi karakter
@@ -56,14 +66,6 @@ public class PlayerThrowing : MonoBehaviour
             {
                 playerMage.Initialize(direction);
             }
-            else
-            {
-                Debug.LogError("PlayerMage component not found on the magePrefab");
-            }
-        }
-        else
-        {
-            Debug.LogError("Failed to instantiate magePrefab");
         }
     }
 }
