@@ -4,53 +4,59 @@ using UnityEngine;
 public class Bow : MonoBehaviour
 {
     public GameObject arrowPrefab;
-    public float attackCooldown;
+    public float coolDown;
+    public float detectionRange;
+    public LayerMask defenderLayer;
+    public Vector3 spawnOffset;  // Offset posisi spawn dari posisi objek ini
 
-    private float lastAttackTime;
-    private EnemyHealth enemyHealth;  // Referensi ke EnemyHealth
+    private float timer = 0f;
+    private Animator animator;
+    private bool firstAttackDone = false;
+    private EnemyHealth enemyHealth;
 
     void Start()
     {
-        lastAttackTime = attackCooldown;
-        enemyHealth = GetComponentInParent<EnemyHealth>();  // Ambil referensi dari parent
+        animator = GetComponentInParent<Animator>();
+        enemyHealth = GetComponentInParent<EnemyHealth>();
+        timer = 0f;
     }
 
     void Update()
     {
-        if (!enabled || enemyHealth.isStunned)
-        {
-            return;  // Jangan lakukan apapun jika Bow tidak aktif atau musuh ter-stun
-        }
+        if (enemyHealth != null && !enemyHealth.isAlive)
+            return;
+        if (animator.GetBool("IsStunned"))
+            return;
 
-        lastAttackTime -= Time.deltaTime;
-        if (lastAttackTime <= 0)
+        if (firstAttackDone && timer > 0)
+            timer -= Time.deltaTime;
+
+        if (timer <= 0 && CheckForDefender())
         {
-            ShootArrow();
-            lastAttackTime = attackCooldown;
+            LaunchArrow();
+            firstAttackDone = true;
+            timer = coolDown;
+            animator.SetBool("IsCooldown", true);
+            Invoke("EndCooldown", coolDown);
         }
     }
 
-    private void ShootArrow()
+    private void LaunchArrow()
     {
-        GameObject arrow = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
-        Collider arrowCollider = arrow.GetComponent<Collider>();
-        if (arrowCollider != null)
-        {
-            arrowCollider.enabled = false;
-        }
-
-        Collider parentCollider = GetComponentInParent<Collider>();
-        if (parentCollider != null)
-        {
-            Physics.IgnoreCollision(arrowCollider, parentCollider);
-        }
-
-        StartCoroutine(EnableColliderWhenPassed(arrow, arrowCollider));
+        // Instantiate arrow at the calculated position relative to this object
+        Vector3 spawnPosition = transform.position + spawnOffset;
+        Instantiate(arrowPrefab, spawnPosition, transform.rotation);
+        animator.SetBool("IsAttack", true);
     }
 
-    private IEnumerator EnableColliderWhenPassed(GameObject arrow, Collider arrowCollider)
+    private void EndCooldown()
     {
-        yield return new WaitUntil(() => arrow.transform.position.x < transform.position.x);
-        arrowCollider.enabled = true;
+        animator.SetBool("IsCooldown", false);
+    }
+
+    private bool CheckForDefender()
+    {
+        RaycastHit hit;
+        return Physics.Raycast(transform.position, Vector3.left, out hit, detectionRange, defenderLayer);
     }
 }

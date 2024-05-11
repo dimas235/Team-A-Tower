@@ -4,56 +4,60 @@ using UnityEngine;
 
 public class MageEnemiesThrowing : MonoBehaviour
 {
-    public GameObject ammoPrefab;
+    public GameObject fireballPrefab;
     public float coolDown;
-
-    private float timer;
-    private MageEnemiesStateMachine mageEnemiesStateMachine;
-    private EnemyHealth enemyHealth;  // Referensi ke EnemyHealth
+    public float detectionRange;
+    public LayerMask defenderLayer;
+    public Vector3 spawnOffset;
+    private float timer = 0f;
+    private Animator animator;
+    private bool firstAttackDone = false;
+    private EnemyHealth enemyHealth;  // Referensi ke kesehatan
 
     void Start()
     {
-        mageEnemiesStateMachine = GetComponent<MageEnemiesStateMachine>();
-        enemyHealth = GetComponent<EnemyHealth>();  // Setel referensi EnemyHealth
-        timer = coolDown;
+        animator = GetComponentInParent<Animator>();
+        enemyHealth = GetComponent<EnemyHealth>();
+        // Mengatur timer ke durasi cooldown tetapi mengizinkan serangan pertama
+        timer = 0f;
     }
 
     void Update()
     {
-        if (mageEnemiesStateMachine.enemiesState != MageEnemiesStateMachine.EnemiesState.Shooting || enemyHealth.isStunned)
-        {
+        if (enemyHealth != null && !enemyHealth.isAlive)
             return;
-        }
+        if (animator.GetBool("IsStunned"))
+            return;
 
-        timer -= Time.deltaTime;
-        if (timer <= 0)
+        if (firstAttackDone && timer > 0)
+            timer -= Time.deltaTime;
+
+        if (timer <= 0 && CheckForDefender())
         {
-            FireAmmo();
+            LaunchFireball();
+            firstAttackDone = true;
             timer = coolDown;
+            animator.SetBool("IsCooldown", true); // Pastikan cooldown diaktifkan
+            Invoke("EndCooldown", coolDown);
         }
     }
 
-    private void FireAmmo()
+    private void LaunchFireball()
     {
-        GameObject ammo = Instantiate(ammoPrefab, transform.position, Quaternion.identity);
-        Collider ammoCollider = ammo.GetComponent<Collider>();
-        if (ammoCollider != null)
-        {
-            ammoCollider.enabled = false;
-        }
-
-        Collider parentCollider = GetComponentInParent<Collider>();
-        if (parentCollider != null)
-        {
-            Physics.IgnoreCollision(ammoCollider, parentCollider);
-        }
-
-        StartCoroutine(EnableColliderWhenPassed(ammo, ammoCollider));
+        // Menyusun posisi spawn berdasarkan offset dari objek ini
+        Vector3 spawnPosition = transform.position + spawnOffset;
+        Instantiate(fireballPrefab, spawnPosition, transform.rotation);
+        animator.SetBool("IsAttack", true); // Mengatur animator untuk menyerang
     }
 
-    private IEnumerator EnableColliderWhenPassed(GameObject ammo, Collider ammoCollider)
+    private void EndCooldown()
     {
-        yield return new WaitUntil(() => ammo.transform.position.x < transform.position.x);
-        ammoCollider.enabled = true;
+        animator.SetBool("IsCooldown", false); // Mengakhiri cooldown
+    }
+
+    private bool CheckForDefender()
+    {
+        RaycastHit hit;
+        return Physics.Raycast(transform.position, Vector2.left, out hit, detectionRange, defenderLayer);
     }
 }

@@ -2,59 +2,58 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
-    public TroopsState troopsState;
     public float detectionRange;
     public LayerMask enemyLayer;
     public DefenderMovement defenderMovement;
     public Throwing throwingScript;
-    private DefenderHealth defenderHealth; // Referensi ke DefenderHealth
+    private DefenderHealth defenderHealth;
+    private Animator animator;
+
+    public enum TroopsState
+    {
+        Idle,
+        Walking,
+        Shooting
+    }
+
+    public TroopsState troopsState;
 
     void Start()
     {
-        troopsState = TroopsState.Walking;
-        defenderHealth = GetComponent<DefenderHealth>();  // Mengambil komponen DefenderHealth
+        troopsState = TroopsState.Idle;
+        defenderHealth = GetComponent<DefenderHealth>();
+        animator = GetComponent<Animator>();
         if (throwingScript != null)
         {
             throwingScript.enabled = false;
         }
+        UpdateAnimatorParameters(false, false, false);
     }
 
     void Update()
     {
-        // Cek kondisi stun dan atur aktivitas berdasarkan kondisi tersebut
         if (defenderHealth.isStunned)
         {
-            throwingScript.enabled = false;
-            if (defenderMovement != null)
-            {
-                defenderMovement.enabled = false;
-            }
+            UpdateAnimatorParameters(false, false, false);
+            return;
         }
-        else
+
+        RaycastHit hit;
+        bool enemyDetected = Physics.Raycast(transform.position, Vector3.right, out hit, detectionRange, enemyLayer);
+
+        if (enemyDetected && troopsState != TroopsState.Shooting)
         {
-            if (throwingScript != null && troopsState == TroopsState.Shooting)
-            {
-                throwingScript.enabled = true;
-            }
-            if (defenderMovement != null && troopsState == TroopsState.Walking)
-            {
-                defenderMovement.enabled = true;
-            }
-
-            RaycastHit hit;
-            bool enemyDetected = Physics.Raycast(transform.position, Vector2.right, out hit, detectionRange, enemyLayer);
-
-            if (troopsState == TroopsState.Walking && enemyDetected)
-            {
-                ChangeState(TroopsState.Shooting);
-            }
-            else if (!enemyDetected && troopsState == TroopsState.Shooting)
-            {
-                ChangeState(TroopsState.Walking);
-            }
+            ChangeState(TroopsState.Shooting);
+        }
+        else if (!enemyDetected && troopsState == TroopsState.Shooting)
+        {
+            ChangeState(TroopsState.Walking);
+        }
+        else if (!enemyDetected && troopsState != TroopsState.Walking)
+        {
+            ChangeState(TroopsState.Walking);
         }
     }
-
 
     void ChangeState(TroopsState newState)
     {
@@ -62,13 +61,17 @@ public class StateMachine : MonoBehaviour
         throwingScript.enabled = (newState == TroopsState.Shooting);
         if (defenderMovement != null)
         {
-            defenderMovement.enabled = (newState == TroopsState.Walking);
+            defenderMovement.enabled = (newState != TroopsState.Shooting);
         }
+
+        bool isCooldown = animator.GetBool("IsCooldown");
+        UpdateAnimatorParameters(newState == TroopsState.Shooting, newState == TroopsState.Walking, isCooldown);
     }
 
-    public enum TroopsState
+    void UpdateAnimatorParameters(bool isAttacking, bool isRunning, bool isCooldown)
     {
-        Walking,
-        Shooting
+        animator.SetBool("IsAttack", isAttacking);
+        animator.SetBool("IsRunning", isRunning);
+        animator.SetBool("IsCooldown", isCooldown);
     }
 }

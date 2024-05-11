@@ -6,54 +6,59 @@ public class MageTroopsThrowing : MonoBehaviour
 {
     public GameObject fireballPrefab;
     public float coolDown;
-
-    private float timer;
-    private MageTroopsStateMachine mageTroopsStateMachineScript;
+    public float detectionRange;
+     public LayerMask enemyLayer;
+    public Vector3 spawnOffset;
+    private float timer = 0f;
+    private Animator animator;
+    private bool firstAttackDone = false;
     private DefenderHealth defenderHealth;  // Referensi ke kesehatan
+
 
     void Start()
     {
-        mageTroopsStateMachineScript = GetComponentInParent<MageTroopsStateMachine>();
-        defenderHealth = GetComponentInParent<DefenderHealth>();  // Mendapatkan referensi kesehatan dari parent
-        timer = coolDown;
+        animator = GetComponentInParent<Animator>();
+        defenderHealth = GetComponent<DefenderHealth>();
+        // Mengatur timer ke durasi cooldown tetapi mengizinkan serangan pertama
+        timer = 0f;
     }
 
     void Update()
     {
-        if (mageTroopsStateMachineScript.troopsState != MageTroopsStateMachine.TroopsState.Shooting || defenderHealth.isStunned)
-        {
-            return;  // Jangan lempar fireball jika dalam keadaan stun atau bukan Shooting
-        }
+        if (defenderHealth != null && !defenderHealth.isAlive)
+            return;
+        if (animator.GetBool("IsStunned"))
+            return;
 
-        timer -= Time.deltaTime;
-        if (timer <= 0)
+        if (firstAttackDone && timer > 0)
+            timer -= Time.deltaTime;
+
+        if (timer <= 0 && CheckForEnemy())
         {
             LaunchFireball();
+            firstAttackDone = true;
             timer = coolDown;
+            animator.SetBool("IsCooldown", true); // Pastikan cooldown diaktifkan
+            Invoke("EndCooldown", coolDown);
         }
     }
 
     private void LaunchFireball()
     {
-        GameObject fireball = Instantiate(fireballPrefab, transform.position, Quaternion.identity);
-        Collider fireballCollider = fireball.GetComponent<Collider>();
-        if (fireballCollider != null)
-        {
-            fireballCollider.enabled = false;
-        }
-
-        Collider parentCollider = GetComponentInParent<Collider>();
-        if (parentCollider != null)
-        {
-            Physics.IgnoreCollision(fireballCollider, parentCollider);
-        }
-
-        StartCoroutine(EnableColliderWhenPassed(fireball, fireballCollider));
+        // Menyusun posisi spawn berdasarkan offset dari objek ini
+        Vector3 spawnPosition = transform.position + spawnOffset;
+        Instantiate(fireballPrefab, spawnPosition, transform.rotation);
+        animator.SetBool("IsAttack", true); // Mengatur animator untuk menyerang
     }
 
-    private IEnumerator EnableColliderWhenPassed(GameObject fireball, Collider fireballCollider)
+    private void EndCooldown()
     {
-        yield return new WaitUntil(() => fireball.transform.position.x > transform.position.x);
-        fireballCollider.enabled = true;
+        animator.SetBool("IsCooldown", false); // Mengakhiri cooldown
+    }
+
+    private bool CheckForEnemy()
+    {
+        RaycastHit hit;
+        return Physics.Raycast(transform.position, Vector3.right, out hit, detectionRange, enemyLayer);
     }
 }

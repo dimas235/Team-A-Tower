@@ -5,6 +5,7 @@ public class MageTroopsStateMachine : MonoBehaviour
 {
     public enum TroopsState
     {
+        idle,
         Walking,
         Shooting
     }
@@ -15,32 +16,40 @@ public class MageTroopsStateMachine : MonoBehaviour
     public MageTroopsThrowing mageTroopsThrowingScript;
     public DefenderMovement defenderMovement;
     private DefenderHealth defenderHealth;
+    private Animator animator;
 
     void Start()
     {
-        troopsState = TroopsState.Walking;
+        troopsState = TroopsState.idle;
         defenderHealth = GetComponent<DefenderHealth>();
-        defenderHealth.OnStunEnded += HandleStunEnded; // Subscribe to the OnStunEnded event
-        mageTroopsThrowingScript.enabled = false;
+        animator = GetComponent<Animator>();
+        if (mageTroopsThrowingScript != null)
+        {
+            mageTroopsThrowingScript.enabled = false;
+        }
+        UpdateAnimatorParameters(false, false, false);
     }
 
     void Update()
     {
         if (defenderHealth.isStunned)
         {
-            mageTroopsThrowingScript.enabled = false;
-            defenderMovement.enabled = false;
+            UpdateAnimatorParameters(false, false, false);
             return;
         }
 
         RaycastHit hit;
-        bool enemyDetected = Physics.Raycast(transform.position, Vector2.right, out hit, detectionRange, enemyLayer);
+        bool enemyDetected = Physics.Raycast(transform.position, Vector3.right, out hit, detectionRange, enemyLayer);
 
-        if (enemyDetected && !defenderHealth.isStunned)
+        if (enemyDetected && troopsState != TroopsState.Shooting)
         {
             ChangeState(TroopsState.Shooting);
         }
-        else if (!enemyDetected)
+        else if (!enemyDetected && troopsState == TroopsState.Shooting)
+        {
+            ChangeState(TroopsState.Walking);
+        }
+        else if (!enemyDetected && troopsState != TroopsState.Walking)
         {
             ChangeState(TroopsState.Walking);
         }
@@ -50,19 +59,19 @@ public class MageTroopsStateMachine : MonoBehaviour
     {
         troopsState = newState;
         mageTroopsThrowingScript.enabled = (newState == TroopsState.Shooting);
-        defenderMovement.enabled = (newState == TroopsState.Walking);
-    }
-
-    private void HandleStunEnded()
-    {
-        if (Physics.Raycast(transform.position, Vector2.right, detectionRange, enemyLayer))
+        if (defenderMovement != null)
         {
-            ChangeState(TroopsState.Shooting);
+            defenderMovement.enabled = (newState != TroopsState.Shooting);
         }
+
+        bool isCooldown = animator.GetBool("IsCooldown");
+        UpdateAnimatorParameters(newState == TroopsState.Shooting, newState == TroopsState.Walking, isCooldown);
     }
 
-    void OnDestroy()
+    void UpdateAnimatorParameters(bool isAttacking, bool isRunning, bool isCooldown)
     {
-        defenderHealth.OnStunEnded -= HandleStunEnded; // Unsubscribe to prevent memory leaks
+        animator.SetBool("IsAttack", isAttacking);
+        animator.SetBool("IsRunning", isRunning);
+        animator.SetBool("IsCooldown", isCooldown);
     }
 }

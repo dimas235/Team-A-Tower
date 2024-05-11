@@ -4,38 +4,45 @@ using UnityEngine;
 
 public class MageEnemiesStateMachine : MonoBehaviour
 {
+    public enum EnemiesState
+    {
+        idle,
+        Walking,
+        Shooting
+    }
+
     public EnemiesState enemiesState;
     public float detectionRange;
     public LayerMask defenderLayer;
     public EnemyMovement enemyMovement;
     public MageEnemiesThrowing mageEnemiesThrowingScript;
     private EnemyHealth enemyHealth;  // Referensi ke EnemyHealth
+    private Animator animator;
 
     void Start()
     {
-        enemiesState = EnemiesState.Walking;
+        enemiesState = EnemiesState.idle;
         enemyHealth = GetComponent<EnemyHealth>();
-        enemyHealth.OnStunEnded += HandleStunEnded;  // Subscribe ke event OnStunEnded
+        animator = GetComponent<Animator>();
         if (mageEnemiesThrowingScript != null)
         {
             mageEnemiesThrowingScript.enabled = false;
         }
+        UpdateAnimatorParameters(false, false, false);
     }
 
     void Update()
     {
         if (enemyHealth.isStunned)
         {
-            mageEnemiesThrowingScript.enabled = false;  // Nonaktifkan mageEnemiesThrowingScript jika musuh ter-stun
-            enemyMovement.SetMovement(false);  // Nonaktifkan enemyMovement jika musuh ter-stun
-            return;  // Keluar dari update jika musuh ter-stun
+            UpdateAnimatorParameters(false, false, false);
+            return;
         }
 
-        Vector3 raycastDirection = transform.TransformDirection(Vector2.left);
         RaycastHit hit;
-        bool defenderDetected = Physics.Raycast(transform.position, Vector2.left, out hit, detectionRange, defenderLayer);
+        bool defenderDetected = Physics.Raycast(transform.position, Vector3.left, out hit, detectionRange, defenderLayer);
 
-        if (enemiesState == EnemiesState.Walking && defenderDetected)
+        if (defenderDetected && enemiesState != EnemiesState.Shooting)
         {
             ChangeState(EnemiesState.Shooting);
         }
@@ -43,31 +50,29 @@ public class MageEnemiesStateMachine : MonoBehaviour
         {
             ChangeState(EnemiesState.Walking);
         }
+        else if (!defenderDetected && enemiesState != EnemiesState.Walking)
+        {
+            ChangeState(EnemiesState.Walking);
+        }
     }
 
     void ChangeState(EnemiesState newState)
     {
-       enemiesState = newState;
-       mageEnemiesThrowingScript.enabled = newState == EnemiesState.Shooting;
-        enemyMovement.SetMovement(newState == EnemiesState.Walking);
-    }
-
-    public enum EnemiesState
-    {
-        Walking,
-        Shooting
-    }
-
-    private void HandleStunEnded()
-    {
-        if (Physics.Raycast(transform.position, Vector2.left, detectionRange, defenderLayer))
+        enemiesState = newState;
+        mageEnemiesThrowingScript.enabled = (newState == EnemiesState.Shooting);
+        if (enemyMovement != null)
         {
-            ChangeState(EnemiesState.Shooting);
+            enemyMovement.enabled = (newState != EnemiesState.Shooting);
         }
+
+        bool isCooldown = animator.GetBool("IsCooldown");
+        UpdateAnimatorParameters(newState == EnemiesState.Shooting, newState == EnemiesState.Walking, isCooldown);
     }
 
-    void OnDestroy()
+    void UpdateAnimatorParameters(bool isAttacking, bool isRunning, bool isCooldown)
     {
-        enemyHealth.OnStunEnded -= HandleStunEnded;  // Unsubscribe dari event OnStunEnded
+        animator.SetBool("IsAttack", isAttacking);
+        animator.SetBool("IsRunning", isRunning);
+        animator.SetBool("IsCooldown", isCooldown);
     }
 }

@@ -5,6 +5,7 @@ public class EnemyStateMachineArcher : MonoBehaviour
 {
     public enum EnemiesState
     {
+        Idle,
         Walking,
         Shooting
     }
@@ -15,41 +16,40 @@ public class EnemyStateMachineArcher : MonoBehaviour
     public EnemyMovement enemyMovement;
     public Bow bowScript;
     private EnemyHealth enemyHealth;  // Referensi ke EnemyHealth
+    private Animator animator;
 
     void Start()
     {
-        enemiesState = EnemiesState.Walking;
-        enemyHealth = GetComponent<EnemyHealth>();
+        enemiesState = EnemiesState.Idle;
+        enemyHealth = GetComponent<EnemyHealth>();  // Ambil referensi dari parent
+        animator = GetComponent<Animator>();
         if (bowScript != null)
         {
             bowScript.enabled = false;
         }
+        UpdateAnimatorParameters(false, false, false);
     }
 
     void Update()
     {
         if (enemyHealth.isStunned)
         {
-            bowScript.enabled = false;
-            enemyMovement.SetMovement(false);
+            UpdateAnimatorParameters(false, false, false);
             return;
         }
 
-        Vector3 raycastDirection = transform.TransformDirection(Vector2.left);
         RaycastHit hit;
-        bool defenderDetected = Physics.Raycast(transform.position, raycastDirection, out hit, detectionRange, defenderLayer);
-        Debug.DrawRay(transform.position, raycastDirection * detectionRange, Color.red);
+        bool defenderDetected = Physics.Raycast(transform.position, Vector3.left, out hit, detectionRange, defenderLayer);
 
-        if (hit.collider != null) // Cek jika ada yang terkena raycast
-        {
-            Debug.Log("Hit: " + hit.collider.gameObject.name);
-        }
-
-        if (enemiesState == EnemiesState.Walking && defenderDetected)
+        if (defenderDetected && enemiesState != EnemiesState.Shooting)
         {
             ChangeState(EnemiesState.Shooting);
         }
         else if (!defenderDetected && enemiesState == EnemiesState.Shooting)
+        {
+            ChangeState(EnemiesState.Walking);
+        }
+        else if (!defenderDetected && enemiesState != EnemiesState.Walking)
         {
             ChangeState(EnemiesState.Walking);
         }
@@ -59,6 +59,18 @@ public class EnemyStateMachineArcher : MonoBehaviour
     {
         enemiesState = newState;
         bowScript.enabled = (newState == EnemiesState.Shooting);
-        enemyMovement.SetMovement(newState == EnemiesState.Walking);
+        if (enemyMovement != null)
+        {
+            enemyMovement.enabled = (newState != EnemiesState.Shooting);
+        }
+        bool isCooldown = animator.GetBool("IsCooldown");
+        UpdateAnimatorParameters(newState == EnemiesState.Shooting, newState == EnemiesState.Walking, isCooldown);
+    }
+
+    void UpdateAnimatorParameters(bool isAttacking, bool isRunning, bool isCooldown)
+    {
+        animator.SetBool("IsAttack", isAttacking);
+        animator.SetBool("IsRunning", isRunning);
+        animator.SetBool("IsCooldown", isCooldown);
     }
 }
