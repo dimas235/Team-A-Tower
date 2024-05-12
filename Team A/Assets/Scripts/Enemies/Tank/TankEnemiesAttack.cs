@@ -15,7 +15,6 @@ public class TankEnemiesAttack : MeleeAttack
 
     void Start()
     {
-        originalStunDuration = stunDuration;  // Store the original stun duration
         timeManager = TimeManager.Instance;
         timeManager.OnTimeChange += HandleTimeChange;
 
@@ -35,7 +34,7 @@ public class TankEnemiesAttack : MeleeAttack
         if (defenderHealth != null)
         {
             defenderHealth.TakeDamage(damage, DefenderHealth.DamageType.Physical);
-            defenderHealth.ApplyStun(stunDuration);  // Use modified stun duration
+            // defenderHealth.ApplyStun(stunDuration);  // Use modified stun duration
             lastAttackTime = Time.time;
             return;
         }

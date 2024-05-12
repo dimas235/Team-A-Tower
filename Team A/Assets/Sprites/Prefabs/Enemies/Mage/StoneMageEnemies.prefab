@@ -122,7 +122,9 @@ MonoBehaviour:
   ammoRb: {fileID: 919043778520726557}
   speed: 5
   range: 3
-  damage: 10
+  damage: 7
+  nightDamageBonus: 4
+  maxHits: 3
 --- !u!54 &919043778520726557
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using TMPro;
 
@@ -6,16 +5,20 @@ public class EnemyHealth : MonoBehaviour
 {
     public int health;
     public int maxHealth = 100;
+    public int coinReward = 10; // Jumlah koin dasar yang diberikan saat musuh mati
+    public float nightTimeRewardMultiplier = 1.5f; // Pengali rewards saat malam hari, sekarang sebagai float
     public GameObject popUpDamagePrefabPhysical;
     public GameObject popUpDamagePrefabMage;
-    public Animator animator;  // Reference to the Animator component
+    public Animator animator;
     public bool isStunned = false;
-    public bool isAlive = true;  // Status hidup atau mati
+    public bool isAlive = true;
     public float stunDuration = 0;
     public event System.Action OnStunEnded;
-
     public delegate void OnStunChange(bool isStunned);
     public event OnStunChange StunStatusChanged;
+
+    public CoinManager coinManager; // Referensi ke CoinManager
+    public TimeManager timeManager; // Referensi ke TimeManager
 
     public enum DamageType
     {
@@ -26,16 +29,18 @@ public class EnemyHealth : MonoBehaviour
     void Start()
     {
         health = maxHealth;
-        animator = GetComponent<Animator>();  // Ensure the Animator component is assigned
+        animator = GetComponent<Animator>();
+        coinManager = FindObjectOfType<CoinManager>(); // Temukan instance CoinManager
+        timeManager = TimeManager.Instance; // Mendapatkan instance TimeManager
     }
 
     public void TakeDamage(int damage, DamageType type)
     {
-        if (!isAlive)  // Hanya memproses damage jika masih hidup
+        if (!isAlive)
             return;
 
         health -= damage;
-        
+
         if (health <= 0)
         {
             Die();
@@ -56,21 +61,26 @@ public class EnemyHealth : MonoBehaviour
 
     private void Die()
     {
-        animator.SetTrigger("Death");  // Aktivasi animasi kematian
-        isAlive = false;  // Set status menjadi tidak hidup
-        gameObject.layer = LayerMask.NameToLayer("IgnoreProjectiles");  // Ubah layer untuk menghiraukan proyektil
-        DisableOtherComponents();  // Nonaktifkan komponen terkait
-        Destroy(gameObject, 5.0f); // Delay penghancuran untuk memungkinkan animasi bermain
+        animator.SetTrigger("Death");
+        isAlive = false;
+        gameObject.layer = LayerMask.NameToLayer("IgnoreProjectiles");
+        DisableOtherComponents();
+        Destroy(gameObject, 5.0f);
+
+        if (coinManager != null)
+        {
+            // Hitung jumlah koin yang harus diberikan
+            int coinsToGive = Mathf.RoundToInt(coinReward * (timeManager.currentTimeOfDay == TimeManager.TimeOfDay.Night ? nightTimeRewardMultiplier : 1f));
+            coinManager.AddCoins(coinsToGive); // Tambahkan koin sesuai dengan pengali
+        }
     }
 
     private void DisableOtherComponents()
     {
-        // Nonaktifkan komponen gerakan
         var movementComponent = GetComponent<EnemyMovement>();
         if (movementComponent != null)
             movementComponent.SetMovement(false);
-        
-        // Nonaktifkan komponen serangan
+
         var attackComponent = GetComponent<TankEnemiesAttack>();
         if (attackComponent != null)
             attackComponent.enabled = false;

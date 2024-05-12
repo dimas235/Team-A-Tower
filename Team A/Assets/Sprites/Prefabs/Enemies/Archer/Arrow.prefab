@@ -148,6 +148,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrowRb: {fileID: 1132389207658853329}
   speed: 5
-  range: 3
-  damage: 2
-  nightDamageMultiplier: 3
+  range: 7
+  damage: 8
+  nightDamageBonus: 6

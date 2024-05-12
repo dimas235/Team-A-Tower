@@ -149,4 +149,5 @@ MonoBehaviour:
   ammoRb: {fileID: 919043778520726557}
   speed: 5
   range: 3
-  damage: 10
+  damage: 13
+  maxHits: 3

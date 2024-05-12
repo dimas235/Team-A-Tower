@@ -32,11 +32,11 @@ public class StateMachine : MonoBehaviour
 
     void Update()
     {
-        if (defenderHealth.isStunned)
-        {
-            UpdateAnimatorParameters(false, false, false);
-            return;
-        }
+        // if (defenderHealth.isStunned)
+        // {
+        //     UpdateAnimatorParameters(false, false, false);
+        //     return;
+        // }
 
         RaycastHit hit;
         bool enemyDetected = Physics.Raycast(transform.position, Vector3.right, out hit, detectionRange, enemyLayer);

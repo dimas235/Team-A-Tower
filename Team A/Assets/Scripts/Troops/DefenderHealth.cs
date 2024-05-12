@@ -9,14 +9,7 @@ public class DefenderHealth : MonoBehaviour
     public GameObject popUpDamagePrefabPhysical;
     public GameObject popUpDamagePrefabMage;
     public Animator animator;  // Reference to the Animator component
-    public bool isStunned = false;
     public bool isAlive = true;  // Status hidup atau mati
-    public event System.Action OnStunEnded;
-    public float stunDuration = 0;
-
-    // Event delegate for stun status changes
-    public delegate void OnStunChange(bool isStunned);
-    public event OnStunChange StunStatusChanged;
 
     public enum DamageType
     {
@@ -53,31 +46,6 @@ public class DefenderHealth : MonoBehaviour
                 popupText.text = damage.ToString();
             }
         }
-    }
-
-    public void ApplyStun(float duration)
-    {
-        if (!isAlive)  // Hanya memproses stun jika masih hidup
-            return;
-
-        if (duration > 0 && !isStunned)
-        {
-            isStunned = true;
-            stunDuration = duration;
-            StartCoroutine(StunCountdown(duration));
-        }
-        else if (duration == 0)
-        {
-            isStunned = false;  // Segera unstun jika durasi adalah 0
-        }
-    }
-
-    private IEnumerator StunCountdown(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        isStunned = false;
-        OnStunEnded?.Invoke();
-        StunStatusChanged?.Invoke(isStunned);
     }
 
     private void Die()

@@ -5,37 +5,40 @@ public class PlayerThrowing : MonoBehaviour
 {
     private bool projectileSpawned;
     public GameObject magePrefab;
-    public float attackCooldown;
-    public Vector3 projectileOffset = new Vector3(0f, 0.5f, 1.0f);  // Default offset: ke depan 1 unit, ke atas 0.5 unit
+    public float attackCooldown = 1.0f;  // Cooldown time in seconds
+    public Vector3 projectileOffset = new Vector3(0f, 0.5f, 1.0f);  // Default offset
 
-    private float lastAttackTime;
+    private float nextAttackTime = 0f;
     private Animator animator;
-    private PlayerMovement playerMovement; // Referensi ke skrip PlayerMovement
+    private PlayerMovement playerMovement; // Reference to PlayerMovement script
 
     void Start()
     {
         animator = GetComponent<Animator>();
-        playerMovement = GetComponent<PlayerMovement>(); // Inisialisasi playerMovement
+        playerMovement = GetComponent<PlayerMovement>();
     }
 
     void Update()
     {
-        lastAttackTime -= Time.deltaTime;
-        if (Input.GetKeyDown(KeyCode.Space) && lastAttackTime <= 0 && !animator.GetBool("IsAttack"))
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time >= nextAttackTime)
         {
-            animator.SetBool("IsAttack", true);
-            lastAttackTime = attackCooldown;
-            playerMovement.SetIsAttacking(true);
-            projectileSpawned = false; // Reset the projectile spawn flag
+            AttemptToAttack();
         }
 
-        // Make sure to reset IsAttack to allow for re-entry into the Attack state
-        if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && animator.GetBool("IsAttack"))
+        if (animator.GetBool("IsAttack") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
         {
             animator.SetBool("IsAttack", false);
             playerMovement.SetIsAttacking(false);
-            projectileSpawned = false; // Reset the projectile spawn flag
+            projectileSpawned = false;
         }
+    }
+
+    private void AttemptToAttack()
+    {
+        animator.SetBool("IsAttack", true);
+        nextAttackTime = Time.time + attackCooldown;
+        playerMovement.SetIsAttacking(true);
+        projectileSpawned = false;
     }
 
     public void SpawnProjectileIfNeeded()
@@ -44,18 +47,16 @@ public class PlayerThrowing : MonoBehaviour
             animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.5f && !projectileSpawned)
         {
             ShootInDirection();
-            projectileSpawned = true; // Set the flag to true after spawning the projectile
+            projectileSpawned = true;
         }
     }
 
     void ShootInDirection()
     {
         if (magePrefab == null)
-        {
-            return;  // Jika magePrefab belum diatur, tidak melakukan apa-apa
-        }
+            return;
 
-        Vector3 direction = playerMovement.facingRight ? Vector3.right : Vector3.left; // Menyesuaikan arah berdasarkan orientasi karakter
+        Vector3 direction = playerMovement.facingRight ? Vector3.right : Vector3.left;
         Vector3 spawnPosition = transform.position + (direction * projectileOffset.z) + Vector3.up * projectileOffset.y;
 
         GameObject mageInstance = Instantiate(magePrefab, spawnPosition, Quaternion.LookRotation(direction));
