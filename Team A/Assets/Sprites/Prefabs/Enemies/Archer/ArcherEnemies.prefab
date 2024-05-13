@@ -689,7 +689,7 @@ MonoBehaviour:
   health: 80
   maxHealth: 80
   coinReward: 4
-  nightTimeRewardMultiplier: 1.5
+  nightTimeRewardMultiplier: 2
   popUpDamagePrefabPhysical: {fileID: 4095716049173766869, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
   popUpDamagePrefabMage: {fileID: 4095716049173766869, guid: 62bd6fc259b38a742a1945138f781f6f, type: 3}
   animator: {fileID: 419155340507354701}
