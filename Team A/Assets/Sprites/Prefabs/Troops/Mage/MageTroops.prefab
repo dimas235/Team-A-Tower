@@ -188,7 +188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 48930a8a3ae32a74e8e1a32c57a2621b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -19.67788
+      value: -16.13
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 48930a8a3ae32a74e8e1a32c57a2621b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -196,7 +196,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 48930a8a3ae32a74e8e1a32c57a2621b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.43663502
+      value: 0.44
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 48930a8a3ae32a74e8e1a32c57a2621b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -360,7 +360,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 48930a8a3ae32a74e8e1a32c57a2621b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1284954535183814562, guid: 48930a8a3ae32a74e8e1a32c57a2621b, type: 3}
       propertyPath: m_Layer
@@ -650,7 +650,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb7954d151efb564589584d28fd7aafd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireballPrefab: {fileID: 7040988754165475524, guid: af1ec68d389055143aaeef652a8e62d7, type: 3}
+  fireballPrefab: {fileID: 224164211170618565, guid: a320a8af236d99446a9e66e207316af7, type: 3}
   coolDown: 8
   detectionRange: 4
   enemyLayer:
@@ -669,8 +669,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2769f236e19091c469844985b60740a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 150
-  maxHealth: 150
+  health: 60
+  maxHealth: 60
   popUpDamagePrefabPhysical: {fileID: 4095716049173766869, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
   popUpDamagePrefabMage: {fileID: 4095716049173766869, guid: 62bd6fc259b38a742a1945138f781f6f, type: 3}
   animator: {fileID: 4748995964220821134}

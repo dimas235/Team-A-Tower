@@ -36,23 +36,26 @@ public class AmmoMageTroops : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Memeriksa jika objek yang bertabrakan adalah musuh atau menara
+        Debug.Log("Projectile hit: " + other.name); // Untuk mengetahui objek apa yang terkena
         EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
         TowerHealthAttacker towerHealthAttacker = other.GetComponent<TowerHealthAttacker>();
 
         if (enemyHealth != null)
         {
+            Debug.Log("Damaging enemy");
             enemyHealth.TakeDamage(damage, EnemyHealth.DamageType.Mage);
-            hitCount++;  // Meningkatkan jumlah hit
+            hitCount++;
             CheckForDestruction();
         }
         else if (towerHealthAttacker != null)
         {
+            Debug.Log("Damaging tower");
             towerHealthAttacker.TakeDamage(damage, TowerHealthAttacker.DamageType.Mage);
-            hitCount++;  // Meningkatkan jumlah hit
+            hitCount++;
             CheckForDestruction();
         }
     }
+
 
     // Memeriksa apakah jumlah hit telah mencapai batas maksimum
     private void CheckForDestruction()
