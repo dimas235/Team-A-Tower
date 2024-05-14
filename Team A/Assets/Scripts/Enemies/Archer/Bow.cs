@@ -25,8 +25,8 @@ public class Bow : MonoBehaviour
     {
         if (enemyHealth != null && !enemyHealth.isAlive)
             return;
-        if (animator.GetBool("IsStunned"))
-            return;
+        // if (animator.GetBool("IsStunned"))
+        //     return;
 
         if (firstAttackDone && timer > 0)
             timer -= Time.deltaTime;

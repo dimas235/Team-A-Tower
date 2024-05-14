@@ -8,12 +8,11 @@ public class TowerHealthAttacker : MonoBehaviour
     public int health;
     public int maxHealth = 100;
     public UnityEvent onTowerDestroyed;
-    public Slider slider;
+    public Image healthImage; // Ganti dari Slider ke Image
     public TextMeshProUGUI healthText;
     public GameObject popUpDamagePrefabPhysical;
     public GameObject popUpDamagePrefabMage;
 
-    // Add isAlive property
     public bool isAlive = true;
 
     public enum DamageType
@@ -25,10 +24,7 @@ public class TowerHealthAttacker : MonoBehaviour
     void Start()
     {
         health = maxHealth;
-        slider.maxValue = maxHealth;
-        slider.value = health;
-        UpdateHealthText();
-        slider.interactable = false;
+        UpdateHealthUI();
     }
 
     public void TakeDamage(int damage, DamageType type)
@@ -37,8 +33,7 @@ public class TowerHealthAttacker : MonoBehaviour
 
         health -= damage;
         health = Mathf.Clamp(health, 0, maxHealth);
-        slider.value = health;
-        UpdateHealthText();
+        UpdateHealthUI();
 
         GameObject selectedPrefab = type == DamageType.Mage ? popUpDamagePrefabMage : popUpDamagePrefabPhysical;
         if (selectedPrefab != null)
@@ -60,16 +55,19 @@ public class TowerHealthAttacker : MonoBehaviour
     private void Die()
     {
         gameObject.SetActive(false);
-        isAlive = false;  // Set isAlive to false upon destruction
+        isAlive = false;
         onTowerDestroyed.Invoke();
-        if (slider.gameObject != null)
-        {
-            Destroy(slider.gameObject);
-        }
     }
 
-    private void UpdateHealthText()
+    private void UpdateHealthUI()
     {
-        healthText.text = health.ToString() + "/" + maxHealth.ToString();
+        if (healthImage != null)
+        {
+            healthImage.fillAmount = (float)health / maxHealth;
+        }
+        if (healthText != null)
+        {
+            healthText.text = health.ToString() + "/" + maxHealth.ToString();
+        }
     }
 }

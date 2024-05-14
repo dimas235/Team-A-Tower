@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
+using System.Threading.Tasks; // Tambahkan ini untuk menggunakan Task
 
 public class PauseController : MonoBehaviour
 {
@@ -7,6 +9,9 @@ public class PauseController : MonoBehaviour
     public GameObject gameUI; // Reference to the in-game UI
     public GameObject pause;
     
+    [SerializeField] RectTransform pausePanelRect;
+    [SerializeField] float topPosY, middlePosY;
+    [SerializeField] float tweenDuration;
 
     private bool isPaused = false; // To track the pause state
 
@@ -46,10 +51,22 @@ public class PauseController : MonoBehaviour
         gameUI.SetActive(false);
         Time.timeScale = 0f; // Stops the game time
         isPaused = true;
+        PausePanelIntro();
     }
 
-    public void ResumeGame()
+    void PausePanelIntro()
     {
+        pausePanelRect.DOAnchorPosY(middlePosY, tweenDuration).SetUpdate(true);
+    }
+
+    async Task PausePanelOutro()
+    {
+        await pausePanelRect.DOAnchorPosY(topPosY, tweenDuration).SetUpdate(true).AsyncWaitForCompletion();
+    }
+
+    public async void ResumeGame()
+    {
+        await PausePanelOutro();
         pause.SetActive(true);
         pausePanel.SetActive(false);
         gameUI.SetActive(true);
