@@ -5,6 +5,8 @@ public class PauseController : MonoBehaviour
 {
     public GameObject pausePanel; // Reference to the pause panel
     public GameObject gameUI; // Reference to the in-game UI
+    public GameObject pause;
+    
 
     private bool isPaused = false; // To track the pause state
 
@@ -31,8 +33,15 @@ public class PauseController : MonoBehaviour
         }
     }
 
+    public void RestartGame()
+    {
+        Time.timeScale = 1f; // Ensure time is back to normal
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reload the current scene
+    }
+
     public void PauseGame()
     {
+        pause.SetActive(false);
         pausePanel.SetActive(true);
         gameUI.SetActive(false);
         Time.timeScale = 0f; // Stops the game time
@@ -41,6 +50,7 @@ public class PauseController : MonoBehaviour
 
     public void ResumeGame()
     {
+        pause.SetActive(true);
         pausePanel.SetActive(false);
         gameUI.SetActive(true);
         Time.timeScale = 1f; // Resumes normal game time

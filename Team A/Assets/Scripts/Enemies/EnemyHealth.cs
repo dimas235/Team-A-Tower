@@ -10,12 +10,7 @@ public class EnemyHealth : MonoBehaviour
     public GameObject popUpDamagePrefabPhysical;
     public GameObject popUpDamagePrefabMage;
     public Animator animator;
-    public bool isStunned = false;
     public bool isAlive = true;
-    public float stunDuration = 0;
-    public event System.Action OnStunEnded;
-    public delegate void OnStunChange(bool isStunned);
-    public event OnStunChange StunStatusChanged;
 
     public CoinManager coinManager; // Referensi ke CoinManager
     public TimeManager timeManager; // Referensi ke TimeManager

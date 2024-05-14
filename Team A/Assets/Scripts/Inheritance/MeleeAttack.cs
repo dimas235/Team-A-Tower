@@ -10,7 +10,7 @@ public abstract class MeleeAttack : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (Time.time - lastAttackTime >= attackCooldown && (!GetComponent<EnemyHealth>() || !GetComponent<EnemyHealth>().isStunned))
+        if (Time.time - lastAttackTime >= attackCooldown && (!GetComponent<EnemyHealth>() || GetComponent<EnemyHealth>().isAlive ))
         {
             Collider[] hits = Physics.OverlapSphere(transform.position, attackRange, targetLayer);
             foreach (var hit in hits)

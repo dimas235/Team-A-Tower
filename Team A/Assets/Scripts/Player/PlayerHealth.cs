@@ -7,7 +7,7 @@ public class PlayerHealth : MonoBehaviour
 {
     public int health;
     public int maxHealth;
-    public Slider slider;
+    public Image healthImage; // Change from Slider to Image
     public TextMeshProUGUI healthText;
     public GameObject popUpDamagePrefabPhysical;
     public GameObject popUpDamagePrefabMage;
@@ -28,9 +28,7 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         health = maxHealth;
-        slider.maxValue = maxHealth;
-        slider.value = health;
-        UpdateHealthText();
+        UpdateHealthUI();
         lastDamageTime = Time.time;
     }
 
@@ -48,8 +46,7 @@ public class PlayerHealth : MonoBehaviour
 
         health -= damage;
         health = Mathf.Clamp(health, 0, maxHealth);
-        slider.value = health;
-        UpdateHealthText();
+        UpdateHealthUI();
         lastDamageTime = Time.time;
 
         GameObject selectedPrefab = type == DamageType.Mage ? popUpDamagePrefabMage : popUpDamagePrefabPhysical;
@@ -95,14 +92,15 @@ public class PlayerHealth : MonoBehaviour
         {
             health += Mathf.FloorToInt(regenRate);
             health = Mathf.Clamp(health, 0, maxHealth);
-            slider.value = health;
-            UpdateHealthText();
+            UpdateHealthUI();
             yield return new WaitForSeconds(1);
         }
     }
 
-    private void UpdateHealthText()
+    private void UpdateHealthUI()
     {
+        float fillAmount = (float)health / maxHealth;
+        healthImage.fillAmount = fillAmount;
         healthText.text = health.ToString() + "/" + maxHealth.ToString();
     }
 }

@@ -6,7 +6,6 @@ public class WinController : MonoBehaviour
     public GameObject panelWin; // Reference ke panel win
     public GameObject gameUI; // Reference ke UI in-game
     public GameObject pauseUI; // Reference ke panel pause
-    public TowerHealthAttacker towerHealth; // Reference ke health tower
 
     // Update is called once per frame
     void Start()
@@ -22,19 +21,24 @@ public class WinController : MonoBehaviour
         pauseUI.SetActive(false);
     }
 
-    // public void NextLevel()
-    // {
-    //     Time.timeScale = 1f; // Pastikan waktu kembali normal
-
-    //     // Ganti "Level2" dengan nama scene level selanjutnya
-    //     SceneManager.LoadScene("Level2");
-    // }
-
     // Fungsi untuk kembali ke MainMenu
     public void ReturnToMainMenu()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void TryAgain()
+    {
+        Time.timeScale = 1f; // Pastikan waktu kembali normal
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void NextLevel()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Level2");
     }
 
     // Method untuk menangani tower yang dihancurkan

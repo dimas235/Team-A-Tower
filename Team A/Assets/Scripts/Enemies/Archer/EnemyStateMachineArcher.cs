@@ -32,12 +32,6 @@ public class EnemyStateMachineArcher : MonoBehaviour
 
     void Update()
     {
-        if (enemyHealth.isStunned)
-        {
-            UpdateAnimatorParameters(false, false, false);
-            return;
-        }
-
         RaycastHit hit;
         bool defenderDetected = Physics.Raycast(transform.position, Vector3.left, out hit, detectionRange, defenderLayer);
 

@@ -69,6 +69,7 @@ public class MainMenuController : MonoBehaviour
     {
         mainMenu.SetActive(true);
         ImageTengah.SetActive(true);
+        Information.SetActive(false);
         IsiControl.SetActive(false);
     }
 
