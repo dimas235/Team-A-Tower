@@ -7,17 +7,22 @@ public class PlayerHealth : MonoBehaviour
 {
     public int health;
     public int maxHealth;
-    public Image healthImage; // Change from Slider to Image
+    public Image healthImage;
     public TextMeshProUGUI healthText;
     public GameObject popUpDamagePrefabPhysical;
     public GameObject popUpDamagePrefabMage;
     public Animator animator;
 
+    public Material blinkMaterial; // Referensi ke material blink
+    public float flashDuration = 0.1f; // Durasi flash
+    private Renderer[] renderers; // Renderer untuk objek
+    private Material[] originalMaterials; // Menyimpan material asli
+
     public float regenRate = 1;
     public float regenDelay = 5;
     private Coroutine regenCoroutine;
     private float lastDamageTime;
-    public bool isDead = false;  // Public untuk diakses oleh PlayerMovement
+    public bool isDead = false;
 
     public enum DamageType
     {
@@ -30,6 +35,14 @@ public class PlayerHealth : MonoBehaviour
         health = maxHealth;
         UpdateHealthUI();
         lastDamageTime = Time.time;
+
+        // Inisialisasi renderers dan originalMaterials
+        renderers = GetComponentsInChildren<Renderer>();
+        originalMaterials = new Material[renderers.Length];
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            originalMaterials[i] = renderers[i].material;
+        }
     }
 
     void Update()
@@ -48,6 +61,9 @@ public class PlayerHealth : MonoBehaviour
         health = Mathf.Clamp(health, 0, maxHealth);
         UpdateHealthUI();
         lastDamageTime = Time.time;
+
+        // Panggil efek flash saat terkena damage
+        StartCoroutine(FlashEffect());
 
         GameObject selectedPrefab = type == DamageType.Mage ? popUpDamagePrefabMage : popUpDamagePrefabPhysical;
         if (selectedPrefab != null)
@@ -71,6 +87,21 @@ public class PlayerHealth : MonoBehaviour
                 StopCoroutine(regenCoroutine);
             }
             regenCoroutine = StartCoroutine(DelayRegenHealth());
+        }
+    }
+
+    private IEnumerator FlashEffect()
+    {
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.material = blinkMaterial;
+        }
+
+        yield return new WaitForSeconds(flashDuration);
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            renderers[i].material = originalMaterials[i];
         }
     }
 

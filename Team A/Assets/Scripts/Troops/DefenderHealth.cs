@@ -11,6 +11,12 @@ public class DefenderHealth : MonoBehaviour
     public Animator animator;  // Reference to the Animator component
     public bool isAlive = true;  // Status hidup atau mati
 
+    public Material blinkMaterial; // Referensi ke material blink
+    public float flashDuration = 0.1f; // Durasi flash
+    private Renderer[] renderers; // Renderer untuk objek
+    private MaterialPropertyBlock propertyBlock;
+    private Material[] originalMaterials; // Menyimpan material asli
+
     public enum DamageType
     {
         Physical,
@@ -21,6 +27,17 @@ public class DefenderHealth : MonoBehaviour
     {
         health = maxHealth;
         animator = GetComponent<Animator>();  // Ensure the Animator component is assigned
+
+        // Inisialisasi renderers dan propertyBlock
+        renderers = GetComponentsInChildren<Renderer>();
+        propertyBlock = new MaterialPropertyBlock();
+
+        // Simpan material asli
+        originalMaterials = new Material[renderers.Length];
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            originalMaterials[i] = renderers[i].material;
+        }
     }
 
     public void TakeDamage(int damage, DamageType type)
@@ -29,7 +46,10 @@ public class DefenderHealth : MonoBehaviour
             return;
 
         health -= damage;
-        
+
+        // Panggil efek flash saat terkena damage
+        StartCoroutine(FlashEffect());
+
         if (health <= 0)
         {
             Die();
@@ -48,6 +68,21 @@ public class DefenderHealth : MonoBehaviour
         }
     }
 
+    private IEnumerator FlashEffect()
+    {
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.material = blinkMaterial;
+        }
+
+        yield return new WaitForSeconds(flashDuration);
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            renderers[i].material = originalMaterials[i];
+        }
+    }
+
     private void Die()
     {
         animator.SetTrigger("Death");  // Activate death animation
@@ -63,7 +98,7 @@ public class DefenderHealth : MonoBehaviour
         var movementComponent = GetComponent<DefenderMovement>();
         if (movementComponent != null)
             movementComponent.enabled = false;
-        
+
         // Disable any attack components
         var attackComponent = GetComponent<TankTroopsAttack>();
         if (attackComponent != null)

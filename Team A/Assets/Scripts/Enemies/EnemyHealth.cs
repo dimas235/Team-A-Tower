@@ -1,19 +1,25 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class EnemyHealth : MonoBehaviour
 {
     public int health;
     public int maxHealth = 100;
-    public int coinReward = 10; // Jumlah koin dasar yang diberikan saat musuh mati
-    public float nightTimeRewardMultiplier = 1.5f; // Pengali rewards saat malam hari, sekarang sebagai float
+    public int coinReward = 10;
+    public float nightTimeRewardMultiplier = 1.5f;
     public GameObject popUpDamagePrefabPhysical;
     public GameObject popUpDamagePrefabMage;
     public Animator animator;
     public bool isAlive = true;
 
-    public CoinManager coinManager; // Referensi ke CoinManager
-    public TimeManager timeManager; // Referensi ke TimeManager
+    public CoinManager coinManager;
+    public TimeManager timeManager;
+
+    public Material blinkMaterial; // Referensi ke material blink
+    public float flashDuration = 0.1f; // Durasi flash
+    private Renderer[] renderers; // Renderer untuk objek
+    private Material[] originalMaterials; // Menyimpan material asli
 
     public enum DamageType
     {
@@ -25,8 +31,16 @@ public class EnemyHealth : MonoBehaviour
     {
         health = maxHealth;
         animator = GetComponent<Animator>();
-        coinManager = FindObjectOfType<CoinManager>(); // Temukan instance CoinManager
-        timeManager = TimeManager.Instance; // Mendapatkan instance TimeManager
+        coinManager = FindObjectOfType<CoinManager>();
+        timeManager = TimeManager.Instance;
+
+        // Inisialisasi renderers dan originalMaterials
+        renderers = GetComponentsInChildren<Renderer>();
+        originalMaterials = new Material[renderers.Length];
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            originalMaterials[i] = renderers[i].material;
+        }
     }
 
     public void TakeDamage(int damage, DamageType type)
@@ -35,6 +49,9 @@ public class EnemyHealth : MonoBehaviour
             return;
 
         health -= damage;
+
+        // Panggil efek flash saat terkena damage
+        StartCoroutine(FlashEffect());
 
         if (health <= 0)
         {
@@ -54,6 +71,21 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
+    private IEnumerator FlashEffect()
+    {
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.material = blinkMaterial;
+        }
+
+        yield return new WaitForSeconds(flashDuration);
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            renderers[i].material = originalMaterials[i];
+        }
+    }
+
     private void Die()
     {
         animator.SetTrigger("Death");
@@ -64,9 +96,8 @@ public class EnemyHealth : MonoBehaviour
 
         if (coinManager != null)
         {
-            // Hitung jumlah koin yang harus diberikan
             int coinsToGive = Mathf.RoundToInt(coinReward * (timeManager.currentTimeOfDay == TimeManager.TimeOfDay.Night ? nightTimeRewardMultiplier : 1f));
-            coinManager.AddCoins(coinsToGive); // Tambahkan koin sesuai dengan pengali
+            coinManager.AddCoins(coinsToGive);
         }
     }
 
