@@ -51,7 +51,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 224164211170618565}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -124,6 +124,7 @@ MonoBehaviour:
   range: 4
   damage: 17
   maxHits: 3
+  fireballParticlesPrefab: {fileID: 8900827913556759434, guid: d3f0999af8d1d854a97e9368c081e08f, type: 3}
 --- !u!54 &8973438695971876035
 Rigidbody:
   m_ObjectHideFlags: 0

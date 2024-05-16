@@ -644,11 +644,11 @@ MonoBehaviour:
   popUpDamagePrefabPhysical: {fileID: 4095716049173766869, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
   popUpDamagePrefabMage: {fileID: 4095716049173766869, guid: 62bd6fc259b38a742a1945138f781f6f, type: 3}
   animator: {fileID: 3502965914524481124}
-  isStunned: 0
   isAlive: 1
-  stunDuration: 0
   coinManager: {fileID: 0}
   timeManager: {fileID: 0}
+  blinkMaterial: {fileID: 2100000, guid: c6ce5c82153d19d4ea4aaad932ad1468, type: 2}
+  flashDuration: 0.1
 --- !u!114 &5860430791131921472
 MonoBehaviour:
   m_ObjectHideFlags: 0

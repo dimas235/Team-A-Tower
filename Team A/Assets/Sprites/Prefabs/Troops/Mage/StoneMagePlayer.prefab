@@ -51,7 +51,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7040988754165475524}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -153,3 +153,4 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 4608
+  fireballParticlesPrefab: {fileID: 8900827913556759434, guid: 4eede12ebdfa636418818796e2f3d6ef, type: 3}

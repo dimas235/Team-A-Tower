@@ -539,12 +539,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2769f236e19091c469844985b60740a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 270
-  maxHealth: 270
+  health: 200
+  maxHealth: 200
   popUpDamagePrefabPhysical: {fileID: 4095716049173766869, guid: 195d312e299fb8d40a2543b7b9eb357b, type: 3}
   popUpDamagePrefabMage: {fileID: 4095716049173766869, guid: 62bd6fc259b38a742a1945138f781f6f, type: 3}
   animator: {fileID: 5579259327186122480}
   isAlive: 1
+  blinkMaterial: {fileID: 2100000, guid: c6ce5c82153d19d4ea4aaad932ad1468, type: 2}
+  flashDuration: 0.1
 --- !u!114 &8589766409108442223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -591,7 +593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efad41e15bb0a46449c15594a852df70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  damage: 6
   attackCooldown: 7
   attackRange: 1
   targetLayer:

@@ -4,17 +4,17 @@ using DG.Tweening; // Tambahkan referensi ke DOTween
 
 public class WinController : MonoBehaviour
 {
-    public GameObject panelWin; // Reference ke panel win
-    public GameObject gameUI; // Reference ke UI in-game
-    public GameObject pauseUI; // Reference ke panel pause
-    public RectTransform panelWinRect; // Reference ke RectTransform panel win
+    public GameObject panelWin; // Referensi ke panel win
+    public GameObject gameUI; // Referensi ke UI in-game
+    public GameObject pauseUI; // Referensi ke panel pause
+    public RectTransform panelWinRect; // Referensi ke RectTransform panel win
 
     [SerializeField] float tweenDuration;
 
     void Start()
     {
         panelWin.SetActive(false);
-        panelWinRect.localScale = Vector3.zero; // Set initial scale to zero
+        panelWinRect.localScale = Vector3.zero; // Set skala awal ke nol
     }
 
     public void ActivateWinPanel()
@@ -24,6 +24,7 @@ public class WinController : MonoBehaviour
         gameUI.SetActive(false);
         pauseUI.SetActive(false);
         AnimateWinPanel();
+        AudioManager.instance.PlayWinSFX(); // Mainkan SFX menang
     }
 
     void AnimateWinPanel()
@@ -51,7 +52,7 @@ public class WinController : MonoBehaviour
         SceneManager.LoadScene("Level2");
     }
 
-    // Method untuk menangani tower yang dihancurkan
+    // Metode untuk menangani tower yang dihancurkan
     public void HandleTowerDestroyed()
     {
         // Tampilkan panel win setelah delay untuk mensimulasikan waktu animasi

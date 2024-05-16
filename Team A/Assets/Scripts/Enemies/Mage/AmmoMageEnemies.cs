@@ -9,12 +9,14 @@ public class AmmoMageEnemies : MonoBehaviour
     public int damage;
     public int nightDamageBonus = 20;  // Additional damage during night
     public int maxHits = 3;  // Maximum number of hits before the projectile destroys
+    public GameObject fireballParticlesPrefab; // Reference to the fireball particles prefab
 
     private float timer;
     private int hitCount;  // Count how many times the projectile has hit enemies
     private TimeManager timeManager;
     private int originalDamage; // Store the original damage to revert back
     private bool isNightTimeDamageBuffApplied = false;
+    private GameObject fireballParticlesInstance;
 
     void Start()
     {
@@ -34,12 +36,16 @@ public class AmmoMageEnemies : MonoBehaviour
         {
             ApplyNightTimeDamageBuff();
         }
+
+        // Instantiate fireball particles and attach to the projectile
+        fireballParticlesInstance = Instantiate(fireballParticlesPrefab, transform.position, Quaternion.identity);
+        fireballParticlesInstance.transform.parent = transform;
     }
 
     void FixedUpdate()
     {
         ammoRb.velocity = Vector3.left * speed;  // Assuming the ammo moves to the left
-        timer -= Time.deltaTime;
+        timer -= Time.fixedDeltaTime;
         if (timer <= 0)
         {
             Destroy(gameObject);
@@ -115,6 +121,12 @@ public class AmmoMageEnemies : MonoBehaviour
         if (timeManager != null)
         {
             timeManager.OnTimeChange -= HandleTimeChange;
+        }
+
+        // Ensure to destroy the particle effect when the projectile is destroyed
+        if (fireballParticlesInstance != null)
+        {
+            Destroy(fireballParticlesInstance);
         }
     }
 }

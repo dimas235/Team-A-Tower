@@ -7,12 +7,18 @@ public class PlayerMage : MonoBehaviour
     public float range;
     public int damage;
     public LayerMask enemyLayer;
+    public GameObject fireballParticlesPrefab; // Referensi ke prefab partikel fireball
 
     private float timer;
+    private GameObject fireballParticlesInstance;
 
     void Start()
     {
         timer = range;
+
+        // Instantiate fireball particles
+        fireballParticlesInstance = Instantiate(fireballParticlesPrefab, transform.position, Quaternion.identity);
+        fireballParticlesInstance.transform.parent = transform; // Attach to the projectile
     }
 
     public void Initialize(Vector3 direction)
@@ -37,8 +43,7 @@ public class PlayerMage : MonoBehaviour
 
             if (enemyHealth != null)
             {
-                // Panggil metode takeDamage dengan huruf 't' kecil sesuai definisi di kelas EnemyHealth
-                enemyHealth.TakeDamage(damage, EnemyHealth.DamageType.Mage); 
+                enemyHealth.TakeDamage(damage, EnemyHealth.DamageType.Mage);
             }
             Destroy(gameObject);
         }
@@ -47,9 +52,17 @@ public class PlayerMage : MonoBehaviour
 
         if (towerHealthAttacker != null)
         {
-            // Panggil metode TakeDamage dengan huruf 'T' besar sesuai definisi di kelas TowerHealthAttacker
             towerHealthAttacker.TakeDamage(damage, TowerHealthAttacker.DamageType.Mage);
             Destroy(gameObject);
+        }
+    }
+
+    void OnDestroy()
+    {
+        // Ensure to destroy the particle effect when the fireball is destroyed
+        if (fireballParticlesInstance != null)
+        {
+            Destroy(fireballParticlesInstance);
         }
     }
 }
