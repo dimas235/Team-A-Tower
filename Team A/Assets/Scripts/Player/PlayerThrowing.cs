@@ -5,12 +5,18 @@ public class PlayerThrowing : MonoBehaviour
 {
     private bool projectileSpawned;
     public GameObject magePrefab;
-    public float attackCooldown = 1.0f;  // Cooldown time in seconds
-    public Vector3 projectileOffset = new Vector3(0f, 0.5f, 1.0f);  // Default offset
+    public GameObject meteorPrefab; // Prefab untuk skill attack
+    public float attackCooldown = 1.0f;  // Cooldown serangan biasa
+    public float skillCooldown = 5.0f;  // Cooldown serangan skill (public)
+    public Vector3 projectileOffset = new Vector3(0f, 0.5f, 1.0f);  // Offset default untuk serangan biasa
+    public Vector3 skillProjectileOffset = new Vector3(0f, 10f, 0f);  // Offset default untuk skill attack
 
     private float nextAttackTime = 0f;
+    private float nextSkillTime = 0f;
     private Animator animator;
-    private PlayerMovement playerMovement; // Reference to PlayerMovement script
+    private PlayerMovement playerMovement; // Referensi ke skrip PlayerMovement
+
+    public LayerMask enemyLayer; // Layer untuk musuh
 
     void Start()
     {
@@ -24,6 +30,11 @@ public class PlayerThrowing : MonoBehaviour
         {
             AttemptToAttack();
         }
+        
+        if (Input.GetKeyDown(KeyCode.R) && Time.time >= nextSkillTime)
+        {
+            AttemptToSkillAttack();
+        }
 
         if (animator.GetBool("IsAttack") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
         {
@@ -31,24 +42,53 @@ public class PlayerThrowing : MonoBehaviour
             playerMovement.SetIsAttacking(false);
             projectileSpawned = false;
         }
+
+        if (animator.GetBool("IsSkillAttack") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        {
+            animator.SetBool("IsSkillAttack", false);
+            playerMovement.SetIsAttacking(false);
+            projectileSpawned = false;
+        }
+
+        // Update the skillCooldown parameter in the Animator
+        animator.SetFloat("skillCooldown", Mathf.Max(0, nextSkillTime - Time.time));
     }
 
     private void AttemptToAttack()
     {
         animator.SetBool("IsAttack", true);
+        animator.SetBool("IsSkillAttack", false);
         nextAttackTime = Time.time + attackCooldown;
         playerMovement.SetIsAttacking(true);
         projectileSpawned = false;
     }
 
-    public void SpawnProjectileIfNeeded()
+    private void AttemptToSkillAttack()
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") &&
-            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.5f && !projectileSpawned)
+        animator.SetBool("IsAttack", false);
+        animator.SetBool("IsSkillAttack", true);
+        nextSkillTime = Time.time + skillCooldown;
+        playerMovement.SetIsAttacking(true);
+        projectileSpawned = false;
+    }
+
+    private GameObject FindNearestEnemy()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 100f, enemyLayer);
+        GameObject nearestEnemy = null;
+        float minDistance = float.MaxValue;
+
+        foreach (Collider collider in hitColliders)
         {
-            ShootInDirection();
-            projectileSpawned = true;
+            float distance = Vector3.Distance(transform.position, collider.transform.position);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                nearestEnemy = collider.gameObject;
+            }
         }
+
+        return nearestEnemy;
     }
 
     void ShootInDirection()
@@ -66,6 +106,28 @@ public class PlayerThrowing : MonoBehaviour
             if (playerMage != null)
             {
                 playerMage.Initialize(direction);
+            }
+        }
+    }
+
+    void SpawnSkillProjectile()
+    {
+        if (meteorPrefab == null)
+            return;
+
+        GameObject nearestEnemy = FindNearestEnemy();
+        if (nearestEnemy == null)
+            return;
+
+        Vector3 spawnPosition = transform.position + new Vector3(skillProjectileOffset.x, skillProjectileOffset.y, 0f);
+
+        GameObject meteorInstance = Instantiate(meteorPrefab, spawnPosition, Quaternion.identity);
+        if (meteorInstance != null)
+        {
+            SkillProjectile skillProjectile = meteorInstance.GetComponent<SkillProjectile>();
+            if (skillProjectile != null)
+            {
+                skillProjectile.Initialize(nearestEnemy.transform.position);
             }
         }
     }
