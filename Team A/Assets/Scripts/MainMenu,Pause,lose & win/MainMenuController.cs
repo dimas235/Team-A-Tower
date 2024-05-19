@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class MainMenuController : MonoBehaviour
 {
 
+    public GameObject yudis;
     public GameObject mainMenu;
     public GameObject Stage;
     public GameObject Information;
@@ -14,7 +15,7 @@ public class MainMenuController : MonoBehaviour
 
     public void PlayGame()
     {
-        SceneManager.LoadScene("MainGame");
+        SceneTransitionManager.Instance.TransitionToScene("MainGame");
     }
 
     public void CreditMenu()
@@ -48,12 +49,14 @@ public class MainMenuController : MonoBehaviour
     public void StageMenu()
     {
         mainMenu.SetActive(false);
+        yudis.SetActive(false);
         Stage.SetActive(true);
     }
 
     public void BackToMainMenu()
     {
         mainMenu.SetActive(true);
+        yudis.SetActive(true);
         ImageTengah.SetActive(true);
         Stage.SetActive(false);
     }

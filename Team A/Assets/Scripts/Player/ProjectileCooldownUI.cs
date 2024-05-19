@@ -16,16 +16,15 @@ public class ProjectileCooldownUI : MonoBehaviour
         cooldownOverlay.gameObject.SetActive(false); // Sembunyikan overlay pada awalnya
     }
 
-    void Update()
+    public void StartCooldown()
     {
-        // Mulai cooldown jika tombol R ditekan dan tidak sedang cooldown
-        if (Input.GetKeyDown(KeyCode.R) && !isCooldown)
+        if (!isCooldown)
         {
             StartCoroutine(CooldownRoutine());
         }
     }
 
-    public IEnumerator CooldownRoutine()
+    private IEnumerator CooldownRoutine()
     {
         isCooldown = true;
         cooldownOverlay.gameObject.SetActive(true); // Tampilkan overlay saat cooldown

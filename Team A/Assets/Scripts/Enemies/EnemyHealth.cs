@@ -16,10 +16,10 @@ public class EnemyHealth : MonoBehaviour
     public CoinManager coinManager;
     public TimeManager timeManager;
 
-    public Material blinkMaterial; // Referensi ke material blink
-    public float flashDuration = 0.1f; // Durasi flash
-    private Renderer[] renderers; // Renderer untuk objek
-    private Material[] originalMaterials; // Menyimpan material asli
+    public Material blinkMaterial;
+    public float flashDuration = 0.1f;
+    private Renderer[] renderers;
+    private Material[] originalMaterials;
 
     public enum DamageType
     {
@@ -34,7 +34,6 @@ public class EnemyHealth : MonoBehaviour
         coinManager = FindObjectOfType<CoinManager>();
         timeManager = TimeManager.Instance;
 
-        // Inisialisasi renderers dan originalMaterials
         renderers = GetComponentsInChildren<Renderer>();
         originalMaterials = new Material[renderers.Length];
         for (int i = 0; i < renderers.Length; i++)
@@ -50,7 +49,6 @@ public class EnemyHealth : MonoBehaviour
 
         health -= damage;
 
-        // Panggil efek flash saat terkena damage
         StartCoroutine(FlashEffect());
 
         if (health <= 0)

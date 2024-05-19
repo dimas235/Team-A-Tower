@@ -18,7 +18,6 @@ public class TankEnemiesAttack : MeleeAttack
         timeManager = TimeManager.Instance;
         timeManager.OnTimeChange += HandleTimeChange;
 
-        // Apply stun duration buff if it starts during the night
         if (timeManager.currentTimeOfDay == TimeManager.TimeOfDay.Night)
         {
             ApplyNightTimeBuff();
@@ -28,13 +27,12 @@ public class TankEnemiesAttack : MeleeAttack
     protected override void PerformAttack(GameObject target)
     {
         if (!enabled || GetComponent<EnemyHealth>().isAlive == false)
-        return;
-    
+            return;
+
         DefenderHealth defenderHealth = target.GetComponent<DefenderHealth>();
         if (defenderHealth != null)
         {
             defenderHealth.TakeDamage(damage, DefenderHealth.DamageType.Physical);
-            // defenderHealth.ApplyStun(stunDuration);  // Use modified stun duration
             lastAttackTime = Time.time;
             return;
         }
@@ -70,7 +68,7 @@ public class TankEnemiesAttack : MeleeAttack
     {
         if (!isNightTimeBuffApplied)
         {
-            stunDuration += nightStunDurationIncrease;  // Increase stun duration
+            stunDuration += nightStunDurationIncrease;
             isNightTimeBuffApplied = true;
         }
     }
@@ -79,7 +77,7 @@ public class TankEnemiesAttack : MeleeAttack
     {
         if (isNightTimeBuffApplied)
         {
-            stunDuration = originalStunDuration;  // Revert to original duration
+            stunDuration = originalStunDuration;
             isNightTimeBuffApplied = false;
         }
     }

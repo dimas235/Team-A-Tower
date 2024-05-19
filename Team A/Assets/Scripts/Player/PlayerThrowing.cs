@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerThrowing : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class PlayerThrowing : MonoBehaviour
     private PlayerMovement playerMovement; // Referensi ke skrip PlayerMovement
 
     public LayerMask enemyLayer; // Layer untuk musuh
+    public ProjectileCooldownUI projectileCooldownUI; // Referensi ke skrip UI cooldown
 
     void Start()
     {
@@ -30,7 +32,7 @@ public class PlayerThrowing : MonoBehaviour
         {
             AttemptToAttack();
         }
-        
+
         if (Input.GetKeyDown(KeyCode.R) && Time.time >= nextSkillTime)
         {
             AttemptToSkillAttack();
@@ -128,6 +130,7 @@ public class PlayerThrowing : MonoBehaviour
             if (skillProjectile != null)
             {
                 skillProjectile.Initialize(nearestEnemy.transform.position);
+                projectileCooldownUI.StartCooldown(); // Mulai cooldown ketika proyektil berhasil di-spawn
             }
         }
     }

@@ -11,7 +11,7 @@ public class TankEnemiesStateMachine : MonoBehaviour
 
     public State currentState;
     public Animator animator;
-    public float detectionRange;
+    public float detectionRange = 10.0f;
     public LayerMask enemyLayer;
     public EnemyMovement enemyMovement;
     public TankEnemiesAttack tankEnemiesAttack;
@@ -37,13 +37,10 @@ public class TankEnemiesStateMachine : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward) * detectionRange;
-        bool enemyDetected = Physics.Raycast(transform.position, forward, out hit, detectionRange, enemyLayer);
-        Debug.DrawRay(transform.position, forward, Color.red, 1.0f);
+        bool enemyDetected = Physics.Raycast(transform.position + Vector3.up * 0.5f, forward, out hit, detectionRange, enemyLayer);
 
         if (enemyDetected)
         {
-            Debug.Log($"Detected: {hit.collider.gameObject.name}, Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
-            // Menambahkan pemeriksaan untuk tiga layer yang berbeda
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("TowerDefense") ||
                 hit.collider.gameObject.layer == LayerMask.NameToLayer("Troops") ||
                 hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
@@ -68,7 +65,6 @@ public class TankEnemiesStateMachine : MonoBehaviour
             animator.SetBool("IsCooldown", false);
         }
     }
-
 
     private void TransitionToAttack()
     {

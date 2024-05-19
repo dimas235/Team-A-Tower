@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class TankTroopsAttack : MeleeAttack
@@ -13,8 +12,8 @@ public class TankTroopsAttack : MeleeAttack
     protected override void PerformAttack(GameObject target)
     {
         if (!enabled || GetComponent<DefenderHealth>().isAlive == false)
-        return;
-        
+            return;
+
         EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
         if (enemyHealth != null)
         {
@@ -22,15 +21,12 @@ public class TankTroopsAttack : MeleeAttack
             lastAttackTime = Time.time;
             return;
         }
-        else
+
+        TowerHealthAttacker towerHealthAttacker = target.GetComponent<TowerHealthAttacker>();
+        if (towerHealthAttacker != null)
         {
-            TowerHealthAttacker towerHealthAttacker = target.GetComponent<TowerHealthAttacker>();
-            if (towerHealthAttacker != null)
-            {
-                towerHealthAttacker.TakeDamage(damage, TowerHealthAttacker.DamageType.Physical);
-                lastAttackTime = Time.time;
-            }
+            towerHealthAttacker.TakeDamage(damage, TowerHealthAttacker.DamageType.Physical);
+            lastAttackTime = Time.time;
         }
     }
-
 }

@@ -6,7 +6,6 @@ public class TankTroopsStateMachine : MonoBehaviour
     {
         Walking,
         Attacking,
-        // Idle
     };
 
     public State currentState;
@@ -37,12 +36,10 @@ public class TankTroopsStateMachine : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward) * detectionRange;
-        bool enemyDetected = Physics.Raycast(transform.position, forward, out hit, detectionRange, enemyLayer);
-        Debug.DrawRay(transform.position, forward, Color.red, 1.0f);
+        bool enemyDetected = Physics.Raycast(transform.position + Vector3.up * 0.5f, forward, out hit, detectionRange, enemyLayer);
 
         if (enemyDetected)
         {
-            Debug.Log($"Detected: {hit.collider.gameObject.name}, Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("TowerEnemy") || hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
                 if (currentState != State.Attacking || animator.GetBool("IsCooldown"))
@@ -75,16 +72,6 @@ public class TankTroopsStateMachine : MonoBehaviour
         troopAttack.enabled = true;
         troopMovement.enabled = false;
     }
-
-    // private void TransitionToIdle()
-    // {
-    //     animator.SetBool("IsRunning", false);
-    //     animator.SetBool("IsAttack", false);
-    //     animator.SetBool("IsCooldown", true);
-    //     currentState = State.Idle;
-    //     troopAttack.enabled = false;
-    //     troopMovement.enabled = false;
-    // }
 
     private void TransitionToWalking()
     {

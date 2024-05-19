@@ -10,7 +10,7 @@ public abstract class MeleeAttack : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (Time.time - lastAttackTime >= attackCooldown && (!GetComponent<EnemyHealth>() || GetComponent<EnemyHealth>().isAlive ))
+        if (Time.time - lastAttackTime >= attackCooldown && (!GetComponent<EnemyHealth>() || GetComponent<EnemyHealth>().isAlive))
         {
             Collider[] hits = Physics.OverlapSphere(transform.position, attackRange, targetLayer);
             foreach (var hit in hits)
@@ -20,13 +20,6 @@ public abstract class MeleeAttack : MonoBehaviour
             }
         }
     }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-    }
-
 
     protected abstract void PerformAttack(GameObject target);
 }

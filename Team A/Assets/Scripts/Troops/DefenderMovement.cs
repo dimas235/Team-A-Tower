@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DefenderMovement : MonoBehaviour
@@ -8,7 +6,7 @@ public class DefenderMovement : MonoBehaviour
     public Rigidbody defenderRb;
     private bool isMovementEnabled = true;
 
-    private DefenderHealth defenderHealth;  // Referensi ke skrip DefenderHealth
+    private DefenderHealth defenderHealth;
 
     void Start()
     {
@@ -17,13 +15,13 @@ public class DefenderMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (isMovementEnabled && defenderHealth.isAlive)  // Cek apakah karakter masih hidup
+        if (isMovementEnabled && defenderHealth.isAlive)
         {
             defenderRb.velocity = Vector2.right * speed;
         }
         else
         {
-            defenderRb.velocity = Vector2.zero;  // Hentikan pergerakan jika mati
+            defenderRb.velocity = Vector2.zero;
         }
     }
 
